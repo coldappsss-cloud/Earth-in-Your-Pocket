@@ -1,0 +1,2 @@
+- [Globe WebView pattern](globe-webview.md) — Three.js globe in WebView uses CDN textures; marker is a child of earth mesh so it rotates automatically.
+- [Expo dark-only theme](expo-dark-theme.md) — colors.ts has only a `dark` key; useColors.ts always returns colors.dark (no light/dark toggle).
