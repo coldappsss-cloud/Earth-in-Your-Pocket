@@ -22,9 +22,16 @@ import * as Haptics from 'expo-haptics';
 import { useColors } from '@/hooks/useColors';
 import {
   COUNTRIES_BY_CODE,
+  NOT_AVAILABLE,
   formatAreaFull,
   formatPopulationFull,
 } from '@/constants/countries';
+
+/** Deep links land here with no history, so `back()` alone can be a dead end. */
+function goBack() {
+  if (router.canGoBack()) router.back();
+  else router.replace('/home');
+}
 
 // ─── Pressable with spring scale ───────────────────────────────────────────
 function ScaleButton({
@@ -114,7 +121,7 @@ export default function CountryDetailScreen() {
         <Ionicons name="alert-circle-outline" size={52} color={colors.mutedForeground} />
         <Text style={[styles.errorText, { color: colors.mutedForeground }]}>Country not found</Text>
         <Pressable
-          onPress={() => router.back()}
+          onPress={goBack}
           style={[styles.errorBack, { backgroundColor: colors.card }]}
           accessibilityRole="button"
           accessibilityLabel="Go back"
@@ -130,36 +137,52 @@ export default function CountryDetailScreen() {
   const tileProps = { accent: colors.primary, cardBg: colors.card, border: colors.border, text: colors.foreground, muted: colors.mutedForeground };
 
   const infoCards = [
-    { icon: 'location-outline',     label: 'Capital',    value: country.capital },
-    { icon: 'people-outline',       label: 'Population', value: formatPopulationFull(country.population) },
-    { icon: 'map-outline',          label: 'Area',        value: formatAreaFull(country.area) },
-    { icon: 'card-outline',         label: 'Currency',   value: `${country.currency.symbol} ${country.currency.name}` },
-    { icon: 'chatbubble-outline',   label: 'Language',   value: country.language },
-    { icon: 'earth-outline',        label: 'Continent',  value: country.continent },
+    { icon: 'business-outline',   label: 'Capital',    value: country.capital ?? NOT_AVAILABLE },
+    { icon: 'people-outline',     label: 'Population', value: formatPopulationFull(country.population) },
+    { icon: 'resize-outline',     label: 'Area',       value: formatAreaFull(country.area) },
+    {
+      icon: 'cash-outline',
+      label: 'Currency',
+      value: country.currency
+        ? `${country.currency.symbol} ${country.currency.name}`
+        : NOT_AVAILABLE,
+    },
+    { icon: 'language-outline',   label: 'Language',   value: country.language ?? NOT_AVAILABLE },
+    { icon: 'earth-outline',      label: 'Continent',  value: country.continent },
   ];
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Back button — pinned so it stays reachable while the page scrolls */}
+      <View style={[styles.headerBar, { paddingTop: topInset + 8 }]}>
+        <ScaleButton onPress={goBack} accessibilityLabel="Go back to the globe">
+          <View
+            style={[
+              styles.backButton,
+              { backgroundColor: colors.cardElevated, borderColor: colors.primary + '55' },
+            ]}
+          >
+            <Ionicons name="chevron-back" size={20} color={colors.primary} />
+            <Text style={[styles.backLabel, { color: colors.foreground }]}>Back</Text>
+          </View>
+        </ScaleButton>
+      </View>
+
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: topInset + 8, paddingBottom: bottomInset + 32 },
+          { paddingTop: topInset + 68, paddingBottom: bottomInset + 32 },
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Back button */}
-        <ScaleButton
-          onPress={() => router.back()}
-          style={styles.backWrap}
-          accessibilityLabel="Go back"
-        >
-          <View style={[styles.backButton, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Ionicons name="arrow-back" size={20} color={colors.foreground} />
-          </View>
-        </ScaleButton>
-
         {/* Flag */}
         <Animated.View entering={FadeIn.duration(500)} style={styles.flagWrap}>
+          <View style={[styles.flagFallback, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <Ionicons name="flag-outline" size={34} color={colors.mutedForeground} />
+            <Text style={[styles.flagFallbackText, { color: colors.mutedForeground }]}>
+              Flag unavailable
+            </Text>
+          </View>
           <Image
             source={{ uri: flagUrl }}
             style={[styles.flagImage, { borderColor: colors.border }]}
@@ -186,14 +209,14 @@ export default function CountryDetailScreen() {
             {country.name}
           </Text>
           <Text style={[styles.capitalSub, { color: colors.mutedForeground }]}>
-            {country.capital}
+            {country.capital ?? country.continent}
           </Text>
         </Animated.View>
 
-        {/* Divider */}
+        {/* Divider — dimming lives in the colour so it can't fight the fade-in */}
         <Animated.View
           entering={FadeIn.delay(180).duration(400)}
-          style={[styles.divider, { backgroundColor: colors.border }]}
+          style={[styles.divider, { backgroundColor: colors.border + '99' }]}
         />
 
         {/* Section header */}
@@ -211,27 +234,35 @@ export default function CountryDetailScreen() {
           ))}
         </View>
 
-        {/* Currency detail card */}
-        <Animated.View
-          entering={FadeInDown.delay(580).duration(380)}
-          style={[styles.currencyCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-          accessible
-          accessibilityLabel={`Currency: ${country.currency.name}, code ${country.currency.code}, symbol ${country.currency.symbol}`}
-        >
-          <View style={[styles.currencyIconWrap, { backgroundColor: colors.primary + '22' }]}>
-            <Text style={[styles.currencySymbol, { color: colors.primary }]}>
-              {country.currency.symbol}
-            </Text>
-          </View>
-          <View style={styles.currencyInfo}>
-            <Text style={[styles.currencyName, { color: colors.foreground }]}>
-              {country.currency.name}
-            </Text>
-            <Text style={[styles.currencyCode, { color: colors.mutedForeground }]}>
-              {country.currency.code} · Official currency
-            </Text>
-          </View>
-        </Animated.View>
+        {/* Currency detail card — omitted entirely when there is no currency,
+            rather than rendering an empty symbol tile */}
+        {country.currency && (
+          <Animated.View
+            entering={FadeInDown.delay(580).duration(380)}
+            style={[styles.currencyCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+            accessible
+            accessibilityLabel={`Currency: ${country.currency.name}, code ${country.currency.code}, symbol ${country.currency.symbol}`}
+          >
+            <View style={[styles.currencyIconWrap, { backgroundColor: colors.primary + '22' }]}>
+              <Text
+                style={[styles.currencySymbol, { color: colors.primary }]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.5}
+              >
+                {country.currency.symbol}
+              </Text>
+            </View>
+            <View style={styles.currencyInfo}>
+              <Text style={[styles.currencyName, { color: colors.foreground }]}>
+                {country.currency.name}
+              </Text>
+              <Text style={[styles.currencyCode, { color: colors.mutedForeground }]}>
+                {country.currency.code} · Official currency
+              </Text>
+            </View>
+          </Animated.View>
+        )}
 
         {/* Coordinates */}
         <Animated.View
@@ -258,14 +289,25 @@ const styles = StyleSheet.create({
   errorBack: { marginTop: 8, paddingHorizontal: 20, paddingVertical: 10, borderRadius: 12 },
   errorBackText: { fontSize: 15, fontFamily: 'Inter_600SemiBold' },
   scrollContent: { paddingHorizontal: 20, gap: 0 },
-  backWrap: { alignSelf: 'flex-start', marginBottom: 20 },
+  headerBar: {
+    position: 'absolute',
+    top: 0,
+    left: 20,
+    zIndex: 10,
+  },
   backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    borderWidth: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    height: 44,
+    paddingLeft: 10,
+    paddingRight: 18,
+    gap: 4,
+    borderRadius: 22,
+    borderWidth: 1,
+  },
+  backLabel: {
+    fontSize: 15,
+    fontFamily: 'Inter_600SemiBold',
   },
   flagWrap: {
     width: '100%',
@@ -275,9 +317,20 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     position: 'relative',
   },
+  flagFallback: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 22,
+    borderWidth: StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  flagFallbackText: {
+    fontSize: 13,
+    fontFamily: 'Inter_400Regular',
+  },
   flagImage: {
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
     borderRadius: 22,
     borderWidth: StyleSheet.hairlineWidth,
   },
@@ -299,7 +352,8 @@ const styles = StyleSheet.create({
     letterSpacing: -0.6,
   },
   capitalSub: { fontSize: 15, fontFamily: 'Inter_400Regular' },
-  divider: { height: StyleSheet.hairlineWidth, width: '100%', marginBottom: 22, opacity: 0.6 },
+  // No `opacity` here — Reanimated's fade-in owns that property on this view.
+  divider: { height: StyleSheet.hairlineWidth, width: '100%', marginBottom: 22 },
   sectionTitle: {
     fontSize: 11,
     fontFamily: 'Inter_600SemiBold',

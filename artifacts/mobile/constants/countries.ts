@@ -7,16 +7,20 @@ export interface Currency {
 export interface Country {
   name: string;
   code: string; // ISO 3166-1 alpha-2 lowercase — used for flags
-  capital: string;
-  population: number;
+  /** Territories such as Antarctica have no capital, currency, language or population. */
+  capital?: string;
+  population?: number;
   area: number; // km²
-  currency: Currency;
-  language: string;
+  currency?: Currency;
+  language?: string;
   continent: string;
   lat: number;
   lon: number;
   region?: string;
 }
+
+/** Shown wherever a country genuinely has no value for a field. */
+export const NOT_AVAILABLE = 'Not available';
 
 export const COUNTRIES: Country[] = [
   // Africa
@@ -150,7 +154,15 @@ export const COUNTRIES: Country[] = [
   { name: 'Papua New Guinea', code: 'pg', capital: 'Port Moresby', population: 9119000, area: 462840, currency: { name: 'Papua New Guinean Kina', code: 'PGK', symbol: 'K' }, language: 'English', continent: 'Oceania', lat: -6.3150, lon: 143.9555 },
   { name: 'Samoa', code: 'ws', capital: 'Apia', population: 217000, area: 2831, currency: { name: 'Samoan Tālā', code: 'WST', symbol: 'T' }, language: 'Samoan', continent: 'Oceania', lat: -13.7590, lon: -172.1046 },
   { name: 'Vanuatu', code: 'vu', capital: 'Port Vila', population: 307000, area: 12189, currency: { name: 'Vanuatu Vatu', code: 'VUV', symbol: 'Vt' }, language: 'Bislama', continent: 'Oceania', lat: -15.3767, lon: 166.9592 },
+
+  // Antarctica — a continent, not a sovereign state: no capital, currency,
+  // official language or permanent population.
+  { name: 'Antarctica', code: 'aq', area: 14200000, continent: 'Antarctica', lat: -82.8628, lon: 135.0 },
 ];
+
+/** Latitude of the Antarctic Treaty boundary. */
+const ANTARCTIC_LIMIT = -60;
+export const ANTARCTICA_CODE = 'aq';
 
 // Build a lookup by code
 export const COUNTRIES_BY_CODE: Record<string, Country> = {};
@@ -163,41 +175,63 @@ export function searchCountries(query: string): Country[] {
   const scored: { c: Country; score: number }[] = [];
   COUNTRIES.forEach(c => {
     const n = c.name.toLowerCase();
-    const k = c.capital.toLowerCase();
+    const k = (c.capital ?? '').toLowerCase();
     let score = 0;
-    if (n === q)             score = 100;
+    if (n === q)              score = 100;
     else if (n.startsWith(q)) score = 80;
-    else if (k === q)         score = 70;
-    else if (k.startsWith(q)) score = 60;
+    else if (k && k === q)    score = 70;
+    else if (k && k.startsWith(q)) score = 60;
     else if (n.includes(q))   score = 40;
-    else if (k.includes(q))   score = 30;
+    else if (k && k.includes(q))   score = 30;
     if (score > 0) scored.push({ c, score });
   });
   return scored.sort((a, b) => b.score - a.score).slice(0, 10).map(r => r.c);
 }
 
-// Find nearest country to lat/lon
+const RAD = Math.PI / 180;
+
+/**
+ * Great-circle central angle between two points, in radians.
+ * Plain degree deltas are wrong here: they ignore the ±180° seam and treat a
+ * degree of longitude near the poles as if it were as wide as at the equator.
+ */
+function angularDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const p1 = lat1 * RAD;
+  const p2 = lat2 * RAD;
+  const dp = (lat2 - lat1) * RAD;
+  const dl = (lon2 - lon1) * RAD;
+  const a =
+    Math.sin(dp / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
+  return 2 * Math.asin(Math.min(1, Math.sqrt(a)));
+}
+
+/** Find the country whose representative point is nearest to lat/lon. */
 export function findNearestCountry(lat: number, lon: number): Country | null {
+  // Antarctica is a continent rather than a point on the map: anything south of
+  // the treaty boundary belongs to it, not to the nearest South American state.
+  if (lat <= ANTARCTIC_LIMIT) {
+    return COUNTRIES_BY_CODE[ANTARCTICA_CODE] ?? null;
+  }
   let nearest: Country | null = null;
   let minDist = Infinity;
   COUNTRIES.forEach(c => {
-    const dlat = c.lat - lat;
-    const dlon = c.lon - lon;
-    const dist = dlat * dlat + dlon * dlon;
+    if (c.code === ANTARCTICA_CODE) return;
+    const dist = angularDistance(lat, lon, c.lat, c.lon);
     if (dist < minDist) { minDist = dist; nearest = c; }
   });
   return nearest;
 }
 
-export function formatPopulation(n: number): string {
+export function formatPopulation(n: number | undefined): string {
+  if (n === undefined) return NOT_AVAILABLE;
   if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(2)}B`;
   if (n >= 1_000_000)     return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000)         return `${(n / 1_000).toFixed(0)}K`;
   return n.toLocaleString();
 }
 
-export function formatPopulationFull(n: number): string {
-  return n.toLocaleString();
+export function formatPopulationFull(n: number | undefined): string {
+  return n === undefined ? NOT_AVAILABLE : n.toLocaleString();
 }
 
 export function formatArea(n: number): string {

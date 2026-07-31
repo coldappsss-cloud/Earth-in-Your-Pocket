@@ -46,8 +46,14 @@ export function CountryPreviewCard({ country, onDismiss }: CountryPreviewCardPro
       </Pressable>
 
       <View style={styles.row}>
-        {/* Flag */}
-        <View style={[styles.flagContainer, { borderColor: colors.border }]}>
+        {/* Flag — icon shows through if the remote image can't be loaded */}
+        <View style={[styles.flagContainer, { borderColor: colors.border, backgroundColor: colors.card }]}>
+          <Ionicons
+            name="flag-outline"
+            size={20}
+            color={colors.mutedForeground}
+            style={styles.flagFallbackIcon}
+          />
           <Image
             source={{ uri: flagUrl }}
             style={styles.flag}
@@ -66,15 +72,17 @@ export function CountryPreviewCard({ country, onDismiss }: CountryPreviewCardPro
             {country.name}
           </Text>
           <Text style={[styles.capital, { color: colors.mutedForeground }]} numberOfLines={1}>
-            {country.capital}
+            {country.capital ?? country.continent}
           </Text>
           <View style={styles.badges}>
-            <View style={[styles.badge, { backgroundColor: colors.backgroundTertiary }]}>
-              <Ionicons name="people-outline" size={11} color={colors.primary} />
-              <Text style={[styles.badgeText, { color: colors.foregroundSecondary }]}>
-                {formatPopulation(country.population)}
-              </Text>
-            </View>
+            {country.population !== undefined && (
+              <View style={[styles.badge, { backgroundColor: colors.backgroundTertiary }]}>
+                <Ionicons name="people-outline" size={11} color={colors.primary} />
+                <Text style={[styles.badgeText, { color: colors.foregroundSecondary }]}>
+                  {formatPopulation(country.population)}
+                </Text>
+              </View>
+            )}
             <View style={[styles.badge, { backgroundColor: colors.backgroundTertiary }]}>
               <Ionicons name="earth-outline" size={11} color={colors.primary} />
               <Text style={[styles.badgeText, { color: colors.foregroundSecondary }]}>
@@ -137,8 +145,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   flag: {
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
+  },
+  flagFallbackIcon: {
+    ...StyleSheet.absoluteFillObject,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    lineHeight: 52,
   },
   info: {
     flex: 1,

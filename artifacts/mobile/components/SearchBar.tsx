@@ -112,7 +112,9 @@ export function SearchBar({ onSelectCountry, onFocusChange }: SearchBarProps) {
   // Show recents when focused + empty query, show results when typing
   const showRecents = isFocused && !query && recents.length > 0;
   const showResults = results.length > 0 && isFocused;
-  const showDropdown = showRecents || showResults;
+  // Typing something with no matches must say so rather than silently collapse.
+  const showEmpty = isFocused && query.trim().length > 0 && results.length === 0;
+  const showDropdown = showRecents || showResults || showEmpty;
 
   const listData: Country[] = showResults ? results : (showRecents ? recents : []);
 
@@ -194,6 +196,14 @@ export function SearchBar({ onSelectCountry, onFocusChange }: SearchBarProps) {
               </Text>
             </View>
           )}
+          {showEmpty && (
+            <View style={styles.emptyState} accessibilityLiveRegion="polite">
+              <Ionicons name="search-outline" size={18} color={colors.mutedForeground} />
+              <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>
+                No countries match “{query.trim()}”
+              </Text>
+            </View>
+          )}
           <FlatList
             data={listData}
             keyExtractor={item => item.code}
@@ -209,7 +219,11 @@ export function SearchBar({ onSelectCountry, onFocusChange }: SearchBarProps) {
                   pressed && { backgroundColor: colors.card },
                 ]}
                 accessibilityRole="button"
-                accessibilityLabel={`${item.name}, capital ${item.capital}`}
+                accessibilityLabel={
+                  item.capital
+                    ? `${item.name}, capital ${item.capital}`
+                    : `${item.name}, ${item.continent}`
+                }
               >
                 <Text style={styles.flag}>{getFlagEmoji(item.code)}</Text>
                 <View style={styles.resultText}>
@@ -220,7 +234,7 @@ export function SearchBar({ onSelectCountry, onFocusChange }: SearchBarProps) {
                     highlightColor={colors.primary}
                   />
                   <HighlightedText
-                    text={`${item.capital} · ${item.continent}`}
+                    text={item.capital ? `${item.capital} · ${item.continent}` : item.continent}
                     query={query}
                     textStyle={[styles.capitalName, { color: colors.mutedForeground }]}
                     highlightColor={colors.primaryLight}
@@ -286,6 +300,18 @@ const styles = StyleSheet.create({
   },
   flatList: {
     flexGrow: 0,
+  },
+  emptyState: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 9,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  emptyText: {
+    fontSize: 13,
+    fontFamily: 'Inter_400Regular',
+    flex: 1,
   },
   resultItem: {
     flexDirection: 'row',

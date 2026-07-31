@@ -38,4 +38,15 @@ The 3D globe is rendered via a WebView wrapping an HTML string with Three.js r12
 - Inverse (tap → lat/lon from local normalized point):
   `lat = asin(lp.y) * 180/PI`
   `lon = atan2(lp.z, -lp.x) * 180/PI - 180`
-- To face a country (rotation): `targetRotY = PI/2 - theta`
+
+## Centring a lat/lon on screen needs BOTH axes solved, plus a shortest-path wrap
+The earth mesh uses Three.js' default Euler order XYZ, so `world = Rx(rotX) · Ry(rotY) · local`. Solving for the point landing on the camera axis `(0,0,1)` gives exactly:
+- `rotY = PI/2 - theta`
+- `rotX = lat` **in radians** — not negated, and not scaled by a fudge factor.
+
+**Why:** the original code paired the correct `rotY` with `rotX = -lat*PI/180*0.4`, which is both the wrong sign and an arbitrary scale. Countries were identified correctly but landed near the top/bottom edge of the globe (France was ~0.9 of the sphere radius off-centre) — the symptom reads as "the globe rotates weirdly", so it is tempting to blame the animation rather than the target.
+
+**How to apply:**
+- `rotY` accumulates without bound from dragging and auto-rotation. Never assign the raw `PI/2 - theta`: wrap the delta with `d = atan2(sin(want - rotY), cos(want - rotY))` and set `target = rotY + d`, or the globe unwinds several full turns (measured ~7 spins after a few minutes of idle auto-rotation).
+- The vertical drag clamp and the focus target must share one `MAX_TILT` constant (~1.45 rad). If the clamp is tighter than the focus target, polar countries centre correctly and then snap away on the user's next drag.
+- Verify this math offline in Node by re-implementing `Rx·Ry` and checking `hypot(x, y) ≈ 0` for the focused point — the WebGL context is unavailable in headless screenshots, so visual verification of the globe is not possible from the workspace preview.

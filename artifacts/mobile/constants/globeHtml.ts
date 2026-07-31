@@ -23,10 +23,26 @@ canvas{display:block}
 (function(){
 'use strict';
 
-// The renderer is loaded from a CDN — fail loudly instead of showing a blank screen.
-if (typeof THREE === 'undefined') {
-  document.getElementById('fallback').style.display = 'flex';
-  try { window.ReactNativeWebView.postMessage(JSON.stringify({type:'error',reason:'three-unavailable'})); } catch(e) {}
+function hasWebGL(){
+  try {
+    var c = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext &&
+      (c.getContext('webgl') || c.getContext('experimental-webgl')));
+  } catch (e) { return false; }
+}
+
+// Three.js comes from a CDN, and WebGL can be unavailable on some devices.
+// Either way, say so instead of leaving a permanently blank screen.
+var failure = typeof THREE === 'undefined' ? 'three-unavailable'
+            : !hasWebGL()                  ? 'webgl-unavailable'
+            : null;
+if (failure) {
+  var fb = document.getElementById('fallback');
+  fb.innerHTML = failure === 'webgl-unavailable'
+    ? 'This device can\\'t display the 3D globe.<br>Search still works.'
+    : 'The globe needs an internet connection to load.<br>Search still works offline.';
+  fb.style.display = 'flex';
+  try { window.ReactNativeWebView.postMessage(JSON.stringify({type:'error',reason:failure})); } catch(e) {}
   window.setSelectedCountry = function(){};
   window.clearSelectedCountry = function(){};
   window.setAutoRotate = function(){};
@@ -338,6 +354,8 @@ glowMesh.visible = false;
 earth.add(glowMesh);
 
 // ─── Interaction state ─────────────────────────────────────────────────────
+// Max vertical tilt — wide enough to centre polar regions such as Antarctica.
+var MAX_TILT=1.45;
 var rotX=0.1, rotY=0, velX=0, velY=0;
 var targetCameraZ=2.5, currentCameraZ=2.5;
 var targetRotX=0.1, targetRotY=0;
@@ -356,10 +374,18 @@ function setMarkerPos(lat,lon){
   glowMesh.position.copy(markerMesh.position);
   markerMesh.visible=true; glowMesh.visible=true;
 }
+// Earth uses Euler order XYZ, so world = Rx(rotX) * Ry(rotY) * localPoint.
+// Solving for the (lat,lon) point landing on the camera axis (0,0,1) gives
+// rotY = PI/2 - theta and rotX = lat (in radians).
 function animateToLatLon(lat,lon){
   var theta=(lon+180)*Math.PI/180;
-  targetRotY=Math.PI/2-theta;
-  targetRotX=-lat*Math.PI/180*0.4;
+  var wantY=Math.PI/2-theta;
+  // rotY accumulates without bound, so pick the equivalent angle nearest the
+  // current rotation — otherwise the globe spins the long way (or many turns).
+  var d=wantY-rotY;
+  d=Math.atan2(Math.sin(d),Math.cos(d));
+  targetRotY=rotY+d;
+  targetRotX=Math.max(-MAX_TILT,Math.min(MAX_TILT,lat*Math.PI/180));
   animToCountry=true;
 }
 
@@ -418,7 +444,7 @@ canvas.addEventListener('touchmove',function(e){
   var tdx=e.touches[0].clientX-tapStartX, tdy=e.touches[0].clientY-tapStartY;
   if(Math.sqrt(tdx*tdx+tdy*tdy)>5) hasMoved=true;
   velY=dx*0.006; velX=dy*0.006;
-  rotY+=velY; rotX=Math.max(-1.1,Math.min(1.1,rotX+velX));
+  rotY+=velY; rotX=Math.max(-MAX_TILT,Math.min(MAX_TILT,rotX+velX));
   prevTX=e.touches[0].clientX; prevTY=e.touches[0].clientY;
 },{passive:false});
 
@@ -473,7 +499,7 @@ function animate(now){
     if(Math.abs(dX)<0.0005&&Math.abs(dY)<0.0005) animToCountry=false;
   } else if(!isDragging){
     velX*=0.88; velY*=0.88;
-    rotX=Math.max(-1.1,Math.min(1.1,rotX+velX)); rotY+=velY;
+    rotX=Math.max(-MAX_TILT,Math.min(MAX_TILT,rotX+velX)); rotY+=velY;
   }
 
   earth.rotation.x=rotX; earth.rotation.y=rotY;
