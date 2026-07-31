@@ -1,0 +1,68 @@
+Implement the architecture and foundation for Space Mode.
+
+This is NOT the final Space Mode implementation. The objective is to build a robust, modular, high-performance foundation that future prompts will expand upon.
+
+Requirements:
+
+GENERAL
+- Preserve every existing Earth Mode feature and interaction.
+- Do not modify or regress any existing functionality.
+- Space Mode must be built as a separate, modular system that integrates cleanly with the current application.
+- Use clean architecture with reusable components and clear separation of responsibilities.
+- Prioritize long-term maintainability and performance.
+
+SCENE ARCHITECTURE
+- Create a dedicated 3D space scene capable of supporting future expansion.
+- Design the rendering pipeline to support thousands of visible objects efficiently.
+- Ensure the architecture can later support planets, moons, asteroids, satellites, comets, labels, animations, and educational overlays without requiring major refactoring.
+
+CAMERA SYSTEM
+- Build a professional camera controller.
+- Support smooth interpolation.
+- Support inertial movement.
+- Support configurable camera limits.
+- Prepare the camera for future fly-to animations and object tracking.
+- Camera movement should remain smooth regardless of zoom level.
+
+TRANSITION SYSTEM
+- Design a seamless transition framework between Earth Mode and Space Mode.
+- The transition system should be modular and reusable.
+- Do not implement the final transition animation yet; only build the underlying framework.
+
+SPACE ENVIRONMENT
+- Create a realistic deep-space environment.
+- Implement a high-quality procedural or optimized starfield.
+- Add realistic background lighting suitable for future Solar System rendering.
+- Ensure the environment is visually premium while remaining highly optimized.
+
+PERFORMANCE
+- Target smooth rendering on modern Android and iOS devices.
+- Avoid unnecessary allocations.
+- Minimize draw calls where practical.
+- Optimize rendering for future scalability.
+- Build with future additions in mind rather than short-term simplicity.
+
+CODE QUALITY
+- Keep the implementation modular.
+- Use descriptive naming.
+- Avoid duplicate logic.
+- Document important architectural decisions where appropriate.
+
+DO NOT IMPLEMENT YET
+- No planets.
+- No moons.
+- No planet information panels.
+- No labels.
+- No educational content.
+- No asteroid belt.
+- No satellites.
+- No galaxy effects.
+- No UI redesign.
+- No unrelated bug fixes.
+
+When finished:
+
+1. Summarize the architecture you implemented.
+2. Explain how future features will integrate into it.
+3. Identify any architectural risks or limitations.
+4. Confirm that Earth Mode remains fully functional and unaffected.
