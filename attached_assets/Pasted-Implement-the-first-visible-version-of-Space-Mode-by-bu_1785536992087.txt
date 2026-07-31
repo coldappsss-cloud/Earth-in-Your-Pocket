@@ -1,0 +1,127 @@
+Implement the first visible version of Space Mode by building a premium-quality Solar System scene on top of the existing architecture.
+
+IMPORTANT
+
+Use the architecture created in the previous task.
+Do NOT refactor or redesign the engine.
+Extend the existing modular system only.
+
+OBJECTIVE
+
+Create a beautiful, realistic and highly optimized Solar System that serves as the foundation for future interactions.
+
+GENERAL
+
+• Earth Mode must remain completely unchanged.
+• Space Mode should render using the existing engine.
+• Keep all code modular and reusable.
+• Maintain excellent mobile performance.
+
+SPACE ENVIRONMENT
+
+Create a premium deep-space environment featuring:
+
+• Dense realistic starfield
+• Stars with natural brightness variation
+• Subtle color temperature variation
+• Very gentle twinkling
+• Deep black space
+• Soft Milky Way style background gradient
+• High visual quality without sacrificing performance
+
+SUN
+
+Implement the Sun as the central object.
+
+Requirements:
+
+• High-quality procedural appearance or optimized texture
+• Warm volumetric glow
+• Corona effect
+• Realistic lighting source for the Solar System
+• Subtle animated surface
+• Optimized for mobile devices
+
+PLANETS
+
+Add all eight planets:
+
+• Mercury
+• Venus
+• Earth
+• Mars
+• Jupiter
+• Saturn
+• Uranus
+• Neptune
+
+Requirements:
+
+• Correct relative ordering from the Sun
+• Visually recognizable appearance
+• Smooth self rotation
+• Appropriate scaling for enjoyable viewing (not strictly scientific if it harms usability)
+• Orbit paths prepared for future animation
+• Modular planet objects so additional data can be attached later
+
+SATURN
+
+Include a high-quality ring system with proper transparency and lighting.
+
+CAMERA
+
+Do NOT implement advanced navigation yet.
+
+Provide only:
+
+• Default overview camera
+• Smooth camera movement
+• Stable rendering
+• Proper framing of the Solar System
+
+Future fly-to controls will be added later.
+
+LIGHTING
+
+Implement physically inspired lighting:
+
+• Sun as primary light source
+• Soft ambient fill
+• Correct illumination direction
+• Premium visual appearance
+
+PERFORMANCE
+
+Target smooth rendering on modern Android and iOS devices.
+
+Optimize by:
+
+• Efficient geometry
+• Texture optimization
+• Minimal allocations
+• Shared materials where appropriate
+• Stable frame rate
+
+DO NOT IMPLEMENT YET
+
+• Planet selection
+• Planet information panels
+• Labels
+• Educational content
+• Moons
+• Asteroids
+• Comets
+• Satellites
+• Galaxy effects
+• Space gameplay
+• Camera fly-to
+• UI redesign
+
+WHEN COMPLETE
+
+Provide:
+
+1. Summary of implementation.
+2. Performance considerations.
+3. Remaining work before Space Mode becomes interactive.
+4. Confirm Earth Mode still behaves exactly as before.
