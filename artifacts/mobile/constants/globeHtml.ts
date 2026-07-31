@@ -11,14 +11,30 @@ export const GLOBE_HTML = `<!DOCTYPE html>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;background:#050A14}
 canvas{display:block}
+#fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  padding:32px;text-align:center;color:#94A3B8;font:400 15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 </style>
 </head>
 <body>
+<div id="fallback">The globe needs an internet connection to load.<br>Search still works offline.</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
 (function(){
 'use strict';
+
+// The renderer is loaded from a CDN — fail loudly instead of showing a blank screen.
+if (typeof THREE === 'undefined') {
+  document.getElementById('fallback').style.display = 'flex';
+  try { window.ReactNativeWebView.postMessage(JSON.stringify({type:'error',reason:'three-unavailable'})); } catch(e) {}
+  window.setSelectedCountry = function(){};
+  window.clearSelectedCountry = function(){};
+  window.setAutoRotate = function(){};
+  window.setInteractive = function(){};
+  window.setRenderActive = function(){};
+  window.__globeMsg = function(){};
+  return;
+}
 
 var cfg = window.GLOBE_CONFIG || {};
 var autoRotate = cfg.autoRotate === true;
@@ -229,7 +245,7 @@ function ll2vec(lon, lat, r) {
   return [ -r*Math.sin(phi)*Math.cos(theta), r*Math.cos(phi), r*Math.sin(phi)*Math.sin(theta) ];
 }
 
-fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+if (typeof topojson !== 'undefined') fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
   .then(function(r){ return r.json(); })
   .then(function(topo){
     geoFeatures = topojson.feature(topo, topo.objects.countries).features;
@@ -348,24 +364,34 @@ function animateToLatLon(lat,lon){
 }
 
 // ─── RN ↔ WebView API ─────────────────────────────────────────────────────
+var hlTimer=null;
+function cancelHlRetry(){ if(hlTimer!==null){ clearTimeout(hlTimer); hlTimer=null; } }
+
 window.setSelectedCountry = function(lat,lon){
+  cancelHlRetry();
   setMarkerPos(lat,lon);
   animateToLatLon(lat,lon);
   autoRotate=false;
   var tries=0;
   function tryHL(){
+    hlTimer=null;
     var f=findFeatureAt(lat,lon);
     if(f){ drawHighlight(f); return; }
-    if(tries++<20) setTimeout(tryHL,150);
+    if(tries++<20) hlTimer=setTimeout(tryHL,150);
   }
   tryHL();
 };
 window.clearSelectedCountry = function(){
+  cancelHlRetry();
   markerMesh.visible=false; glowMesh.visible=false;
   hlCtx.clearRect(0,0,HL_W,HL_H); hlTexture.needsUpdate=true;
   hlMesh.visible=false; hlPulseActive=false;
 };
-window.setAutoRotate = function(v){ autoRotate=!!v; };
+window.setAutoRotate  = function(v){ autoRotate=!!v; };
+window.setInteractive = function(v){
+  interactive=!!v;
+  if(!interactive){ isDragging=false; velX=velY=0; }
+};
 
 // ─── Touch handlers ────────────────────────────────────────────────────────
 function pinchD(e){ var dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY; return Math.sqrt(dx*dx+dy*dy); }
@@ -424,15 +450,19 @@ function onRNMsg(e){
     if(d.type==='selectCountry')  window.setSelectedCountry(d.lat,d.lon);
     else if(d.type==='clearSelection') window.clearSelectedCountry();
     else if(d.type==='setAutoRotate')  window.setAutoRotate(d.value);
+    else if(d.type==='setInteractive') window.setInteractive(d.value);
+    else if(d.type==='setRenderActive') window.setRenderActive(d.value);
   }catch(err){}
 }
 window.addEventListener('message',onRNMsg);
 document.addEventListener('message',onRNMsg);
+// Direct entry point used by injectJavaScript from React Native.
+window.__globeMsg = function(s){ onRNMsg({data:s}); };
 
 // ─── Animation loop ────────────────────────────────────────────────────────
-var lastTime=0;
+var lastTime=0, rafId=null, renderActive=true;
 function animate(now){
-  requestAnimationFrame(animate);
+  rafId=requestAnimationFrame(animate);
   var dt=Math.min((now-lastTime)/1000,0.05); lastTime=now; elapsed+=dt;
 
   // Globe rotation
@@ -474,7 +504,20 @@ function animate(now){
 
   renderer.render(scene,camera);
 }
-requestAnimationFrame(animate);
+rafId=requestAnimationFrame(animate);
+
+window.setRenderActive = function(v){
+  v=!!v;
+  if(v===renderActive) return;
+  renderActive=v;
+  if(v){
+    lastTime=performance.now();
+    if(rafId===null) rafId=requestAnimationFrame(animate);
+  } else if(rafId!==null){
+    cancelAnimationFrame(rafId); rafId=null;
+    cancelHlRetry();
+  }
+};
 
 // Ready signal
 setTimeout(function(){ try{ window.ReactNativeWebView.postMessage(JSON.stringify({type:'ready'})); }catch(e){} },400);

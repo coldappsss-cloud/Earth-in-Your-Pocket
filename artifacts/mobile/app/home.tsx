@@ -14,6 +14,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobeView } from '@/components/GlobeView';
@@ -33,6 +34,15 @@ export default function HomeScreen() {
   const [isSearchFocused, setIsSearchFocused]     = useState(false);
   const [globeReady, setGlobeReady]               = useState(false);
   const [tapHint, setTapHint]                     = useState(true);
+  // Pause the globe's render loop while the detail screen covers this one.
+  const [isFocused, setIsFocused]                 = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsFocused(true);
+      return () => setIsFocused(false);
+    }, []),
+  );
 
   const topInset    = Platform.OS === 'web' ? 67 : insets.top;
   const bottomInset = Platform.OS === 'web' ? 34 : insets.bottom;
@@ -66,6 +76,7 @@ export default function HomeScreen() {
         <GlobeView
           autoRotate={!selectedCountry}
           interactive
+          active={isFocused}
           onCountryTap={handleCountryTap}
           onReady={() => setGlobeReady(true)}
           selectedLatLon={globeSelectedLatLon}
@@ -105,8 +116,7 @@ export default function HomeScreen() {
         <Animated.View
           entering={FadeIn.delay(900).duration(700)}
           exiting={FadeOut.duration(300)}
-          style={styles.tapHint}
-          pointerEvents="none"
+          style={[styles.tapHint, { pointerEvents: 'none' }]}
         >
           <View style={[styles.tapHintPill, { backgroundColor: 'rgba(13,27,46,0.85)', borderColor: colors.border }]}>
             <Ionicons name="finger-print-outline" size={14} color={colors.primary} />

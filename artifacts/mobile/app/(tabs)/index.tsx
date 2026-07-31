@@ -67,9 +67,10 @@ function ShootingStar({ delay, startX, startY, dx, dy, interval }: StarProps) {
     shadowRadius: 3,
     shadowOpacity: 0.8,
     transform: [{ rotate: '32deg' }],
+    pointerEvents: 'none' as const,
   }));
 
-  return <Animated.View style={style} pointerEvents="none" />;
+  return <Animated.View style={style} />;
 }
 
 // ─── Splash Screen ─────────────────────────────────────────────────────────
@@ -150,8 +151,7 @@ export default function SplashScreen() {
       <LinearGradient
         colors={['transparent', 'rgba(5,10,20,0.7)', 'rgba(5,10,20,0.95)']}
         locations={[0.35, 0.7, 1]}
-        style={StyleSheet.absoluteFill}
-        pointerEvents="none"
+        style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}
       />
 
       {/* Shooting stars */}
@@ -161,8 +161,10 @@ export default function SplashScreen() {
 
       {/* Text content */}
       <View
-        style={[styles.content, { paddingTop: topInset + 20, paddingBottom: bottomInset + 50 }]}
-        pointerEvents="none"
+        style={[
+          styles.content,
+          { paddingTop: topInset + 20, paddingBottom: bottomInset + 50, pointerEvents: 'none' },
+        ]}
       >
         <View style={{ flex: 1 }} />
 
