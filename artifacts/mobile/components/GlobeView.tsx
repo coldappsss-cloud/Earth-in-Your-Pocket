@@ -3,13 +3,23 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import { GLOBE_HTML } from '@/constants/globeHtml';
 
+/** Scene modes the 3D engine can display. Earth is the default. */
+export type SceneMode = 'earth' | 'space';
+
 interface GlobeViewProps {
   autoRotate?: boolean;
   interactive?: boolean;
   /** When false the WebView pauses its render loop to save battery/memory. */
   active?: boolean;
+  /** Which scene the shared 3D engine renders. Defaults to the globe. */
+  mode?: SceneMode;
+  /** Set false to switch scenes instantly instead of running a transition. */
+  animateModeChange?: boolean;
   onCountryTap?: (lat: number, lon: number) => void;
   onReady?: () => void;
+  onModeChange?: (mode: SceneMode) => void;
+  onTransitionStart?: (from: SceneMode, to: SceneMode) => void;
+  onTransitionEnd?: (mode: SceneMode) => void;
   selectedLatLon?: { lat: number; lon: number } | null;
 }
 
@@ -18,14 +28,20 @@ type GlobeCommand =
   | { type: 'clearSelection' }
   | { type: 'setAutoRotate'; value: boolean }
   | { type: 'setInteractive'; value: boolean }
-  | { type: 'setRenderActive'; value: boolean };
+  | { type: 'setRenderActive'; value: boolean }
+  | { type: 'setMode'; mode: SceneMode; animated: boolean };
 
 export function GlobeView({
   autoRotate = false,
   interactive = true,
   active = true,
+  mode = 'earth',
+  animateModeChange = true,
   onCountryTap,
   onReady,
+  onModeChange,
+  onTransitionStart,
+  onTransitionEnd,
   selectedLatLon,
 }: GlobeViewProps) {
   const webviewRef = useRef<WebView>(null);
@@ -34,7 +50,7 @@ export function GlobeView({
   const pendingRef = useRef<GlobeCommand[]>([]);
   const [, forceRender] = useState(0);
 
-  const config = JSON.stringify({ autoRotate, interactive });
+  const config = JSON.stringify({ autoRotate, interactive, mode });
   const injectedJS = `window.GLOBE_CONFIG=${config};true;`;
 
   const send = useCallback((cmd: GlobeCommand) => {
@@ -74,12 +90,19 @@ export function GlobeView({
     send({ type: 'setRenderActive', value: active });
   }, [active, send]);
 
+  useEffect(() => {
+    send({ type: 'setMode', mode, animated: animateModeChange });
+  }, [mode, animateModeChange, send]);
+
   const handleMessage = (event: WebViewMessageEvent) => {
     try {
       const data = JSON.parse(event.nativeEvent.data) as {
         type: string;
         lat?: number;
         lon?: number;
+        mode?: SceneMode;
+        from?: SceneMode;
+        to?: SceneMode;
       };
       if (data.type === 'tap' && onCountryTap && data.lat !== undefined && data.lon !== undefined) {
         onCountryTap(data.lat, data.lon);
@@ -89,6 +112,12 @@ export function GlobeView({
         pendingRef.current = [];
         queued.forEach(send);
         onReady?.();
+      } else if (data.type === 'modeChange' && data.mode) {
+        onModeChange?.(data.mode);
+      } else if (data.type === 'transitionStart' && data.from && data.to) {
+        onTransitionStart?.(data.from, data.to);
+      } else if (data.type === 'transitionEnd' && data.mode) {
+        onTransitionEnd?.(data.mode);
       }
     } catch {
       // ignore parse errors
