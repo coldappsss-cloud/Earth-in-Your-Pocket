@@ -1,0 +1,195 @@
+The Solar System implementation is functionally complete, but the visual quality does not meet the intended premium standard.
+
+Do NOT redesign the engine architecture.
+
+Do NOT modify Earth Mode.
+
+Do NOT change the mode system.
+
+Do NOT add gameplay, interactions, labels, information panels, or new UI.
+
+Your only objective is to transform the current Space Mode into a premium AAA-quality visual experience.
+
+==================================================
+VISUAL GOAL
+==================================================
+
+The scene should feel like opening a modern premium space exploration app.
+
+The first impression should immediately communicate scale, realism and beauty.
+
+Everything should remain optimized for mobile devices.
+
+==================================================
+SPACE ENVIRONMENT
+==================================================
+
+Replace the current empty-looking background with a cinematic deep-space environment.
+
+Requirements:
+
+• Multiple layers of stars for depth
+• Different star sizes
+• Natural brightness variation
+• Subtle color variation
+• Soft twinkling
+• Very subtle Milky Way style dust
+• Gentle nebula gradients
+• Space should feel enormous rather than empty
+
+Avoid visual clutter.
+
+==================================================
+THE SUN
+==================================================
+
+Completely overhaul the Sun.
+
+It should become the visual centerpiece.
+
+Add:
+
+• Animated plasma surface
+• Dynamic corona
+• Warm volumetric glow
+• Bloom effect
+• Solar flare details
+• Realistic color transitions
+• Surface movement
+• Better emissive material
+
+The Sun should look energetic and alive.
+
+==================================================
+PLANETS
+==================================================
+
+Every planet should immediately be recognizable.
+
+Do not use simple coloured spheres.
+
+Each planet needs its own premium material.
+
+Examples:
+
+Mercury
+• Rocky
+• Crater detail
+• Rough surface
+
+Venus
+• Thick cloud layers
+• Soft atmospheric glow
+
+Earth
+• Oceans
+• Continents
+• Clouds
+• Atmospheric rim
+• Day/night lighting
+• City lights on the night side
+
+Mars
+• Dusty terrain
+• Polar caps
+• Surface variation
+
+Jupiter
+• High-quality cloud bands
+• Great Red Spot
+• Volumetric appearance
+
+Saturn
+• Rich atmospheric bands
+• Beautiful ring transparency
+• Ring shadows
+• Ring lighting
+
+Uranus
+• Soft atmospheric gradients
+
+Neptune
+• Deep blue atmosphere
+• Storm detail
+
+==================================================
+LIGHTING
+==================================================
+
+Improve lighting significantly.
+
+Requirements:
+
+• Physically inspired lighting
+• Better ambient contribution
+• Soft reflected light
+• Better contrast
+• Cinematic balance
+
+Avoid flat lighting.
+
+==================================================
+CAMERA PRESENTATION
+==================================================
+
+Do not implement fly-to or interactions.
+
+Simply improve the presentation.
+
+Requirements:
+
+• Better default framing
+• More cinematic composition
+• Better depth perception
+• Attractive viewing angle
+
+The opening view should immediately impress the user.
+
+==================================================
+MATERIALS
+==================================================
+
+Improve all materials.
+
+Avoid plastic-looking surfaces.
+
+Introduce subtle roughness variation, atmospheric scattering, and realistic shading where appropriate.
+
+==================================================
+PERFORMANCE
+==================================================
+
+Maintain smooth rendering on mobile devices.
+
+Do not introduce expensive effects that noticeably reduce frame rate.
+
+Use procedural shaders where appropriate.
+
+Reuse materials and geometries when possible.
+
+Avoid per-frame allocations.
+
+==================================================
+DO NOT IMPLEMENT
+==================================================
+
+• Planet selection
+• Camera fly-to
+• Labels
+• Information panels
+• Educational overlays
+• Orbit animation
+• Moons
+• Asteroids
+• Satellites
+• Gameplay
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+When Space Mode loads, the first reaction should be:
+
+"This looks beautiful."
+
+Provide a summary of the visual improvements made and confirm that Earth Mode remains completely unchanged.
