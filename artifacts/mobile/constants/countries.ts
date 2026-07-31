@@ -58,110 +58,93 @@ export const COUNTRIES: Country[] = [
   { name: 'Costa Rica', code: 'cr', capital: 'San José', population: 5212000, area: 51100, currency: { name: 'Costa Rican Colón', code: 'CRC', symbol: '₡' }, language: 'Spanish', continent: 'North America', lat: 9.7489, lon: -83.7534 },
   { name: 'Cuba', code: 'cu', capital: 'Havana', population: 11326000, area: 109884, currency: { name: 'Cuban Peso', code: 'CUP', symbol: '$' }, language: 'Spanish', continent: 'North America', lat: 21.5218, lon: -77.7812 },
   { name: 'Dominican Republic', code: 'do', capital: 'Santo Domingo', population: 10800000, area: 48671, currency: { name: 'Dominican Peso', code: 'DOP', symbol: '$' }, language: 'Spanish', continent: 'North America', lat: 18.7357, lon: -70.1627 },
-  { name: 'Ecuador', code: 'ec', capital: 'Quito', population: 17800000, area: 283561, currency: { name: 'US Dollar', code: 'USD', symbol: '$' }, language: 'Spanish', continent: 'South America', lat: -1.8312, lon: -78.1834 },
+  { name: 'Ecuador', code: 'ec', capital: 'Quito', population: 18001000, area: 283561, currency: { name: 'US Dollar', code: 'USD', symbol: '$' }, language: 'Spanish', continent: 'South America', lat: -1.8312, lon: -78.1834 },
   { name: 'El Salvador', code: 'sv', capital: 'San Salvador', population: 6486000, area: 21041, currency: { name: 'US Dollar', code: 'USD', symbol: '$' }, language: 'Spanish', continent: 'North America', lat: 13.7942, lon: -88.8965 },
-  { name: 'Guatemala', code: 'gt', capital: 'Guatemala City', population: 16860000, area: 108889, currency: { name: 'Guatemalan Quetzal', code: 'GTQ', symbol: 'Q' }, language: 'Spanish', continent: 'North America', lat: 15.7835, lon: -90.2308 },
-  { name: 'Haiti', code: 'ht', capital: 'Port-au-Prince', population: 11447000, area: 27750, currency: { name: 'Haitian Gourde', code: 'HTG', symbol: 'G' }, language: 'Haitian Creole', continent: 'North America', lat: 18.9712, lon: -72.2852 },
-  { name: 'Honduras', code: 'hn', capital: 'Tegucigalpa', population: 10278000, area: 112492, currency: { name: 'Honduran Lempira', code: 'HNL', symbol: 'L' }, language: 'Spanish', continent: 'North America', lat: 15.1994, lon: -86.2419 },
-  { name: 'Jamaica', code: 'jm', capital: 'Kingston', population: 2961000, area: 10991, currency: { name: 'Jamaican Dollar', code: 'JMD', symbol: 'J$' }, language: 'English', continent: 'North America', lat: 18.1096, lon: -77.2975 },
-  { name: 'Mexico', code: 'mx', capital: 'Mexico City', population: 128900000, area: 1964375, currency: { name: 'Mexican Peso', code: 'MXN', symbol: '$' }, language: 'Spanish', continent: 'North America', lat: 23.6345, lon: -102.5528 },
-  { name: 'Nicaragua', code: 'ni', capital: 'Managua', population: 6850000, area: 130373, currency: { name: 'Nicaraguan Córdoba', code: 'NIO', symbol: 'C$' }, language: 'Spanish', continent: 'North America', lat: 12.8654, lon: -85.2072 },
-  { name: 'Panama', code: 'pa', capital: 'Panama City', population: 4352000, area: 75417, currency: { name: 'Panamanian Balboa', code: 'PAB', symbol: 'B/.' }, language: 'Spanish', continent: 'North America', lat: 8.5380, lon: -80.7821 },
-  { name: 'Paraguay', code: 'py', capital: 'Asunción', population: 7353000, area: 406752, currency: { name: 'Paraguayan Guaraní', code: 'PYG', symbol: '₲' }, language: 'Spanish', continent: 'South America', lat: -23.4420, lon: -58.4438 },
-  { name: 'Peru', code: 'pe', capital: 'Lima', population: 33000000, area: 1285216, currency: { name: 'Peruvian Sol', code: 'PEN', symbol: 'S/' }, language: 'Spanish', continent: 'South America', lat: -9.1900, lon: -75.0152 },
-  { name: 'Trinidad and Tobago', code: 'tt', capital: 'Port of Spain', population: 1400000, area: 5128, currency: { name: 'Trinidad and Tobago Dollar', code: 'TTD', symbol: '$' }, language: 'English', continent: 'North America', lat: 10.6918, lon: -61.2225 },
-  { name: 'United States', code: 'us', capital: 'Washington D.C.', population: 331900000, area: 9833517, currency: { name: 'US Dollar', code: 'USD', symbol: '$' }, language: 'English', continent: 'North America', lat: 37.0902, lon: -95.7129 },
+  { name: 'Guatemala', code: 'gt', capital: 'Guatemala City', population: 17109000, area: 108889, currency: { name: 'Guatemalan Quetzal', code: 'GTQ', symbol: 'Q' }, language: 'Spanish', continent: 'North America', lat: 15.7835, lon: -90.2308 },
+  { name: 'Honduras', code: 'hn', capital: 'Tegucigalpa', population: 10280000, area: 112492, currency: { name: 'Honduran Lempira', code: 'HNL', symbol: 'L' }, language: 'Spanish', continent: 'North America', lat: 15.2000, lon: -86.2419 },
+  { name: 'Jamaica', code: 'jm', capital: 'Kingston', population: 2961000, area: 10990, currency: { name: 'Jamaican Dollar', code: 'JMD', symbol: '$' }, language: 'English', continent: 'North America', lat: 18.1096, lon: -77.2975 },
+  { name: 'Mexico', code: 'mx', capital: 'Mexico City', population: 130263000, area: 1964375, currency: { name: 'Mexican Peso', code: 'MXN', symbol: '$' }, language: 'Spanish', continent: 'North America', lat: 23.6345, lon: -102.5528 },
+  { name: 'Nicaragua', code: 'ni', capital: 'Managua', population: 6948000, area: 130373, currency: { name: 'Nicaraguan Córdoba', code: 'NIO', symbol: 'C$' }, language: 'Spanish', continent: 'North America', lat: 12.8654, lon: -85.2072 },
+  { name: 'Panama', code: 'pa', capital: 'Panama City', population: 4352000, area: 75420, currency: { name: 'Panamanian Balboa', code: 'PAB', symbol: 'B/.' }, language: 'Spanish', continent: 'North America', lat: 8.5380, lon: -80.7821 },
+  { name: 'Paraguay', code: 'py', capital: 'Asunción', population: 7353000, area: 406752, currency: { name: 'Paraguayan Guaraní', code: 'PYG', symbol: '₲' }, language: 'Spanish', continent: 'South America', lat: -23.4425, lon: -58.4438 },
+  { name: 'Peru', code: 'pe', capital: 'Lima', population: 33360000, area: 1285216, currency: { name: 'Peruvian Sol', code: 'PEN', symbol: 'S/.' }, language: 'Spanish', continent: 'South America', lat: -9.1900, lon: -75.0152 },
+  { name: 'Trinidad and Tobago', code: 'tt', capital: 'Port of Spain', population: 1367000, area: 5128, currency: { name: 'Trinidad and Tobago Dollar', code: 'TTD', symbol: '$' }, language: 'English', continent: 'North America', lat: 10.6918, lon: -61.2225 },
+  { name: 'United States', code: 'us', capital: 'Washington D.C.', population: 331449000, area: 9833517, currency: { name: 'US Dollar', code: 'USD', symbol: '$' }, language: 'English', continent: 'North America', lat: 37.0902, lon: -95.7129 },
   { name: 'Uruguay', code: 'uy', capital: 'Montevideo', population: 3474000, area: 176215, currency: { name: 'Uruguayan Peso', code: 'UYU', symbol: '$' }, language: 'Spanish', continent: 'South America', lat: -32.5228, lon: -55.7658 },
-  { name: 'Venezuela', code: 've', capital: 'Caracas', population: 28200000, area: 916445, currency: { name: 'Venezuelan Bolívar', code: 'VES', symbol: 'Bs.S' }, language: 'Spanish', continent: 'South America', lat: 6.4238, lon: -66.5897 },
+  { name: 'Venezuela', code: 've', capital: 'Caracas', population: 28436000, area: 916445, currency: { name: 'Venezuelan Bolívar', code: 'VES', symbol: 'Bs.' }, language: 'Spanish', continent: 'South America', lat: 6.4238, lon: -66.5897 },
 
   // Asia
-  { name: 'Afghanistan', code: 'af', capital: 'Kabul', population: 40754000, area: 652230, currency: { name: 'Afghan Afghani', code: 'AFN', symbol: '؋' }, language: 'Pashto', continent: 'Asia', lat: 33.9391, lon: 67.7100 },
-  { name: 'Armenia', code: 'am', capital: 'Yerevan', population: 2963000, area: 29743, currency: { name: 'Armenian Dram', code: 'AMD', symbol: '֏' }, language: 'Armenian', continent: 'Asia', lat: 40.0691, lon: 45.0382 },
-  { name: 'Azerbaijan', code: 'az', capital: 'Baku', population: 10110000, area: 86600, currency: { name: 'Azerbaijani Manat', code: 'AZN', symbol: '₼' }, language: 'Azerbaijani', continent: 'Asia', lat: 40.1431, lon: 47.5769 },
-  { name: 'Bahrain', code: 'bh', capital: 'Manama', population: 1472000, area: 760, currency: { name: 'Bahraini Dinar', code: 'BHD', symbol: '.د.ب' }, language: 'Arabic', continent: 'Asia', lat: 26.0275, lon: 50.5500 },
-  { name: 'Bangladesh', code: 'bd', capital: 'Dhaka', population: 166300000, area: 147570, currency: { name: 'Bangladeshi Taka', code: 'BDT', symbol: '৳' }, language: 'Bengali', continent: 'Asia', lat: 23.6850, lon: 90.3563 },
-  { name: 'Bhutan', code: 'bt', capital: 'Thimphu', population: 771600, area: 38394, currency: { name: 'Bhutanese Ngultrum', code: 'BTN', symbol: 'Nu' }, language: 'Dzongkha', continent: 'Asia', lat: 27.5142, lon: 90.4336 },
-  { name: 'Brunei', code: 'bn', capital: 'Bandar Seri Begawan', population: 441500, area: 5765, currency: { name: 'Brunei Dollar', code: 'BND', symbol: '$' }, language: 'Malay', continent: 'Asia', lat: 4.5353, lon: 114.7277 },
-  { name: 'Cambodia', code: 'kh', capital: 'Phnom Penh', population: 16718000, area: 181035, currency: { name: 'Cambodian Riel', code: 'KHR', symbol: '៛' }, language: 'Khmer', continent: 'Asia', lat: 12.5657, lon: 104.9910 },
-  { name: 'China', code: 'cn', capital: 'Beijing', population: 1411000000, area: 9596960, currency: { name: 'Chinese Yuan', code: 'CNY', symbol: '¥' }, language: 'Mandarin', continent: 'Asia', lat: 35.8617, lon: 104.1954 },
-  { name: 'Georgia', code: 'ge', capital: 'Tbilisi', population: 3989000, area: 69700, currency: { name: 'Georgian Lari', code: 'GEL', symbol: '₾' }, language: 'Georgian', continent: 'Asia', lat: 42.3154, lon: 43.3569 },
-  { name: 'India', code: 'in', capital: 'New Delhi', population: 1393000000, area: 3287263, currency: { name: 'Indian Rupee', code: 'INR', symbol: '₹' }, language: 'Hindi', continent: 'Asia', lat: 20.5937, lon: 78.9629 },
-  { name: 'Indonesia', code: 'id', capital: 'Jakarta', population: 273500000, area: 1904569, currency: { name: 'Indonesian Rupiah', code: 'IDR', symbol: 'Rp' }, language: 'Indonesian', continent: 'Asia', lat: -0.7893, lon: 113.9213 },
+  { name: 'Afghanistan', code: 'af', capital: 'Kabul', population: 40099000, area: 652230, currency: { name: 'Afghan Afghani', code: 'AFN', symbol: '؋' }, language: 'Pashto', continent: 'Asia', lat: 33.9391, lon: 67.7100 },
+  { name: 'Bangladesh', code: 'bd', capital: 'Dhaka', population: 169356000, area: 147570, currency: { name: 'Bangladeshi Taka', code: 'BDT', symbol: '৳' }, language: 'Bengali', continent: 'Asia', lat: 23.6850, lon: 90.3563 },
+  { name: 'Cambodia', code: 'kh', capital: 'Phnom Penh', population: 16589000, area: 181035, currency: { name: 'Cambodian Riel', code: 'KHR', symbol: '៛' }, language: 'Khmer', continent: 'Asia', lat: 12.5657, lon: 104.9910 },
+  { name: 'China', code: 'cn', capital: 'Beijing', population: 1412600000, area: 9596960, currency: { name: 'Chinese Yuan', code: 'CNY', symbol: '¥' }, language: 'Mandarin', continent: 'Asia', lat: 35.8617, lon: 104.1954 },
+  { name: 'India', code: 'in', capital: 'New Delhi', population: 1393409038, area: 3287263, currency: { name: 'Indian Rupee', code: 'INR', symbol: '₹' }, language: 'Hindi', continent: 'Asia', lat: 20.5937, lon: 78.9629 },
+  { name: 'Indonesia', code: 'id', capital: 'Jakarta', population: 276362000, area: 1904569, currency: { name: 'Indonesian Rupiah', code: 'IDR', symbol: 'Rp' }, language: 'Indonesian', continent: 'Asia', lat: -0.7893, lon: 113.9213 },
   { name: 'Iran', code: 'ir', capital: 'Tehran', population: 85029000, area: 1648195, currency: { name: 'Iranian Rial', code: 'IRR', symbol: '﷼' }, language: 'Persian', continent: 'Asia', lat: 32.4279, lon: 53.6880 },
-  { name: 'Iraq', code: 'iq', capital: 'Baghdad', population: 40223000, area: 438317, currency: { name: 'Iraqi Dinar', code: 'IQD', symbol: 'ع.د' }, language: 'Arabic', continent: 'Asia', lat: 33.2232, lon: 43.6793 },
-  { name: 'Israel', code: 'il', capital: 'Jerusalem', population: 9449000, area: 20770, currency: { name: 'Israeli New Shekel', code: 'ILS', symbol: '₪' }, language: 'Hebrew', continent: 'Asia', lat: 31.0461, lon: 34.8516 },
-  { name: 'Japan', code: 'jp', capital: 'Tokyo', population: 125700000, area: 377975, currency: { name: 'Japanese Yen', code: 'JPY', symbol: '¥' }, language: 'Japanese', continent: 'Asia', lat: 36.2048, lon: 138.2529 },
-  { name: 'Jordan', code: 'jo', capital: 'Amman', population: 10110000, area: 89342, currency: { name: 'Jordanian Dinar', code: 'JOD', symbol: 'JD' }, language: 'Arabic', continent: 'Asia', lat: 30.5852, lon: 36.2384 },
+  { name: 'Iraq', code: 'iq', capital: 'Baghdad', population: 41179000, area: 438317, currency: { name: 'Iraqi Dinar', code: 'IQD', symbol: 'ع.د' }, language: 'Arabic', continent: 'Asia', lat: 33.2232, lon: 43.6793 },
+  { name: 'Israel', code: 'il', capital: 'Jerusalem', population: 9364000, area: 20770, currency: { name: 'Israeli Shekel', code: 'ILS', symbol: '₪' }, language: 'Hebrew', continent: 'Asia', lat: 31.0461, lon: 34.8516 },
+  { name: 'Japan', code: 'jp', capital: 'Tokyo', population: 125360000, area: 377930, currency: { name: 'Japanese Yen', code: 'JPY', symbol: '¥' }, language: 'Japanese', continent: 'Asia', lat: 36.2048, lon: 138.2529 },
+  { name: 'Jordan', code: 'jo', capital: 'Amman', population: 10269000, area: 89342, currency: { name: 'Jordanian Dinar', code: 'JOD', symbol: 'JD' }, language: 'Arabic', continent: 'Asia', lat: 30.5852, lon: 36.2384 },
   { name: 'Kazakhstan', code: 'kz', capital: 'Nur-Sultan', population: 19000000, area: 2724900, currency: { name: 'Kazakhstani Tenge', code: 'KZT', symbol: '₸' }, language: 'Kazakh', continent: 'Asia', lat: 48.0196, lon: 66.9237 },
-  { name: 'Kuwait', code: 'kw', capital: 'Kuwait City', population: 4328000, area: 17818, currency: { name: 'Kuwaiti Dinar', code: 'KWD', symbol: 'د.ك' }, language: 'Arabic', continent: 'Asia', lat: 29.3117, lon: 47.4818 },
-  { name: 'Kyrgyzstan', code: 'kg', capital: 'Bishkek', population: 6623000, area: 199951, currency: { name: 'Kyrgyzstani Som', code: 'KGS', symbol: 'лв' }, language: 'Kyrgyz', continent: 'Asia', lat: 41.2044, lon: 74.7661 },
-  { name: 'Laos', code: 'la', capital: 'Vientiane', population: 7275000, area: 236800, currency: { name: 'Lao Kip', code: 'LAK', symbol: '₭' }, language: 'Lao', continent: 'Asia', lat: 19.8563, lon: 102.4955 },
-  { name: 'Lebanon', code: 'lb', capital: 'Beirut', population: 5593000, area: 10452, currency: { name: 'Lebanese Pound', code: 'LBP', symbol: 'ل.ل' }, language: 'Arabic', continent: 'Asia', lat: 33.8547, lon: 35.8623 },
-  { name: 'Malaysia', code: 'my', capital: 'Kuala Lumpur', population: 32657000, area: 329847, currency: { name: 'Malaysian Ringgit', code: 'MYR', symbol: 'RM' }, language: 'Malay', continent: 'Asia', lat: 4.2105, lon: 101.9758 },
-  { name: 'Maldives', code: 'mv', capital: 'Malé', population: 540500, area: 298, currency: { name: 'Maldivian Rufiyaa', code: 'MVR', symbol: 'Rf' }, language: 'Dhivehi', continent: 'Asia', lat: 3.2028, lon: 73.2207 },
-  { name: 'Mongolia', code: 'mn', capital: 'Ulaanbaatar', population: 3347000, area: 1566000, currency: { name: 'Mongolian Tögrög', code: 'MNT', symbol: '₮' }, language: 'Mongolian', continent: 'Asia', lat: 46.8625, lon: 103.8467 },
-  { name: 'Myanmar', code: 'mm', capital: 'Naypyidaw', population: 54410000, area: 676578, currency: { name: 'Myanmar Kyat', code: 'MMK', symbol: 'K' }, language: 'Burmese', continent: 'Asia', lat: 21.9162, lon: 95.9560 },
-  { name: 'Nepal', code: 'np', capital: 'Kathmandu', population: 29192000, area: 147181, currency: { name: 'Nepalese Rupee', code: 'NPR', symbol: '₨' }, language: 'Nepali', continent: 'Asia', lat: 28.3949, lon: 84.1240 },
-  { name: 'North Korea', code: 'kp', capital: 'Pyongyang', population: 25887000, area: 120538, currency: { name: 'North Korean Won', code: 'KPW', symbol: '₩' }, language: 'Korean', continent: 'Asia', lat: 40.3399, lon: 127.5101 },
-  { name: 'Oman', code: 'om', capital: 'Muscat', population: 4520000, area: 309500, currency: { name: 'Omani Rial', code: 'OMR', symbol: 'ر.ع.' }, language: 'Arabic', continent: 'Asia', lat: 21.4735, lon: 55.9754 },
-  { name: 'Pakistan', code: 'pk', capital: 'Islamabad', population: 220900000, area: 881913, currency: { name: 'Pakistani Rupee', code: 'PKR', symbol: '₨' }, language: 'Urdu', continent: 'Asia', lat: 30.3753, lon: 69.3451 },
-  { name: 'Philippines', code: 'ph', capital: 'Manila', population: 111047000, area: 300000, currency: { name: 'Philippine Peso', code: 'PHP', symbol: '₱' }, language: 'Filipino', continent: 'Asia', lat: 12.8797, lon: 121.7740 },
+  { name: 'Kuwait', code: 'kw', capital: 'Kuwait City', population: 4270000, area: 17818, currency: { name: 'Kuwaiti Dinar', code: 'KWD', symbol: 'KD' }, language: 'Arabic', continent: 'Asia', lat: 29.3117, lon: 47.4818 },
+  { name: 'Laos', code: 'la', capital: 'Vientiane', population: 7379000, area: 236800, currency: { name: 'Lao Kip', code: 'LAK', symbol: '₭' }, language: 'Lao', continent: 'Asia', lat: 19.8563, lon: 102.4955 },
+  { name: 'Lebanon', code: 'lb', capital: 'Beirut', population: 6769000, area: 10452, currency: { name: 'Lebanese Pound', code: 'LBP', symbol: 'ل.ل' }, language: 'Arabic', continent: 'Asia', lat: 33.8547, lon: 35.8623 },
+  { name: 'Malaysia', code: 'my', capital: 'Kuala Lumpur', population: 32776000, area: 329847, currency: { name: 'Malaysian Ringgit', code: 'MYR', symbol: 'RM' }, language: 'Malay', continent: 'Asia', lat: 4.2105, lon: 101.9758 },
+  { name: 'Mongolia', code: 'mn', capital: 'Ulaanbaatar', population: 3347000, area: 1564116, currency: { name: 'Mongolian Tögrög', code: 'MNT', symbol: '₮' }, language: 'Mongolian', continent: 'Asia', lat: 46.8625, lon: 103.8467 },
+  { name: 'Myanmar', code: 'mm', capital: 'Naypyidaw', population: 54409000, area: 676578, currency: { name: 'Myanmar Kyat', code: 'MMK', symbol: 'K' }, language: 'Burmese', continent: 'Asia', lat: 21.9162, lon: 95.9560 },
+  { name: 'Nepal', code: 'np', capital: 'Kathmandu', population: 29609000, area: 147181, currency: { name: 'Nepalese Rupee', code: 'NPR', symbol: '₨' }, language: 'Nepali', continent: 'Asia', lat: 28.3949, lon: 84.1240 },
+  { name: 'North Korea', code: 'kp', capital: 'Pyongyang', population: 25971000, area: 120538, currency: { name: 'North Korean Won', code: 'KPW', symbol: '₩' }, language: 'Korean', continent: 'Asia', lat: 40.3399, lon: 127.5101 },
+  { name: 'Oman', code: 'om', capital: 'Muscat', population: 4491000, area: 309500, currency: { name: 'Omani Rial', code: 'OMR', symbol: 'ر.ع.' }, language: 'Arabic', continent: 'Asia', lat: 21.5126, lon: 55.9233 },
+  { name: 'Pakistan', code: 'pk', capital: 'Islamabad', population: 220892000, area: 881913, currency: { name: 'Pakistani Rupee', code: 'PKR', symbol: '₨' }, language: 'Urdu', continent: 'Asia', lat: 30.3753, lon: 69.3451 },
+  { name: 'Philippines', code: 'ph', capital: 'Manila', population: 110818000, area: 300000, currency: { name: 'Philippine Peso', code: 'PHP', symbol: '₱' }, language: 'Filipino', continent: 'Asia', lat: 12.8797, lon: 121.7740 },
   { name: 'Qatar', code: 'qa', capital: 'Doha', population: 2688000, area: 11586, currency: { name: 'Qatari Riyal', code: 'QAR', symbol: 'ر.ق' }, language: 'Arabic', continent: 'Asia', lat: 25.3548, lon: 51.1839 },
-  { name: 'Saudi Arabia', code: 'sa', capital: 'Riyadh', population: 35340000, area: 2149690, currency: { name: 'Saudi Riyal', code: 'SAR', symbol: 'ر.س' }, language: 'Arabic', continent: 'Asia', lat: 23.8859, lon: 45.0792 },
-  { name: 'Singapore', code: 'sg', capital: 'Singapore', population: 5850000, area: 728, currency: { name: 'Singapore Dollar', code: 'SGD', symbol: '$' }, language: 'English', continent: 'Asia', lat: 1.3521, lon: 103.8198 },
-  { name: 'South Korea', code: 'kr', capital: 'Seoul', population: 51740000, area: 100210, currency: { name: 'South Korean Won', code: 'KRW', symbol: '₩' }, language: 'Korean', continent: 'Asia', lat: 35.9078, lon: 127.7669 },
-  { name: 'Sri Lanka', code: 'lk', capital: 'Colombo', population: 22156000, area: 65610, currency: { name: 'Sri Lankan Rupee', code: 'LKR', symbol: '₨' }, language: 'Sinhala', continent: 'Asia', lat: 7.8731, lon: 80.7718 },
-  { name: 'Syria', code: 'sy', capital: 'Damascus', population: 20000000, area: 185180, currency: { name: 'Syrian Pound', code: 'SYP', symbol: '£' }, language: 'Arabic', continent: 'Asia', lat: 34.8021, lon: 38.9968 },
-  { name: 'Taiwan', code: 'tw', capital: 'Taipei', population: 23570000, area: 36193, currency: { name: 'New Taiwan Dollar', code: 'TWD', symbol: '$' }, language: 'Mandarin', continent: 'Asia', lat: 23.6978, lon: 120.9605 },
-  { name: 'Tajikistan', code: 'tj', capital: 'Dushanbe', population: 9750000, area: 143100, currency: { name: 'Tajikistani Somoni', code: 'TJS', symbol: 'SM' }, language: 'Tajik', continent: 'Asia', lat: 38.8610, lon: 71.2761 },
-  { name: 'Thailand', code: 'th', capital: 'Bangkok', population: 69799000, area: 513120, currency: { name: 'Thai Baht', code: 'THB', symbol: '฿' }, language: 'Thai', continent: 'Asia', lat: 15.8700, lon: 100.9925 },
-  { name: 'Turkey', code: 'tr', capital: 'Ankara', population: 84340000, area: 783562, currency: { name: 'Turkish Lira', code: 'TRY', symbol: '₺' }, language: 'Turkish', continent: 'Asia', lat: 38.9637, lon: 35.2433 },
-  { name: 'Turkmenistan', code: 'tm', capital: 'Ashgabat', population: 6031200, area: 488100, currency: { name: 'Turkmenistani Manat', code: 'TMT', symbol: 'T' }, language: 'Turkmen', continent: 'Asia', lat: 38.9697, lon: 59.5563 },
-  { name: 'United Arab Emirates', code: 'ae', capital: 'Abu Dhabi', population: 9890000, area: 83600, currency: { name: 'UAE Dirham', code: 'AED', symbol: 'د.إ' }, language: 'Arabic', continent: 'Asia', lat: 23.4241, lon: 53.8478 },
-  { name: 'Uzbekistan', code: 'uz', capital: 'Tashkent', population: 34920000, area: 448978, currency: { name: 'Uzbekistani Som', code: 'UZS', symbol: 'лв' }, language: 'Uzbek', continent: 'Asia', lat: 41.3775, lon: 64.5853 },
-  { name: 'Vietnam', code: 'vn', capital: 'Hanoi', population: 97340000, area: 331212, currency: { name: 'Vietnamese Đồng', code: 'VND', symbol: '₫' }, language: 'Vietnamese', continent: 'Asia', lat: 14.0583, lon: 108.2772 },
+  { name: 'Saudi Arabia', code: 'sa', capital: 'Riyadh', population: 34814000, area: 2149690, currency: { name: 'Saudi Riyal', code: 'SAR', symbol: 'ر.س' }, language: 'Arabic', continent: 'Asia', lat: 23.8859, lon: 45.0792 },
+  { name: 'Singapore', code: 'sg', capital: 'Singapore', population: 5850000, area: 710, currency: { name: 'Singapore Dollar', code: 'SGD', symbol: '$' }, language: 'English', continent: 'Asia', lat: 1.3521, lon: 103.8198 },
+  { name: 'South Korea', code: 'kr', capital: 'Seoul', population: 51709000, area: 100210, currency: { name: 'South Korean Won', code: 'KRW', symbol: '₩' }, language: 'Korean', continent: 'Asia', lat: 35.9078, lon: 127.7669 },
+  { name: 'Sri Lanka', code: 'lk', capital: 'Sri Jayawardenepura Kotte', population: 21919000, area: 65610, currency: { name: 'Sri Lankan Rupee', code: 'LKR', symbol: 'Rs' }, language: 'Sinhala', continent: 'Asia', lat: 7.8731, lon: 80.7718 },
+  { name: 'Syria', code: 'sy', capital: 'Damascus', population: 20384000, area: 185180, currency: { name: 'Syrian Pound', code: 'SYP', symbol: '£' }, language: 'Arabic', continent: 'Asia', lat: 34.8021, lon: 38.9968 },
+  { name: 'Taiwan', code: 'tw', capital: 'Taipei', population: 23571000, area: 36193, currency: { name: 'New Taiwan Dollar', code: 'TWD', symbol: '$' }, language: 'Mandarin', continent: 'Asia', lat: 23.6978, lon: 120.9605 },
+  { name: 'Tajikistan', code: 'tj', capital: 'Dushanbe', population: 9537000, area: 143100, currency: { name: 'Tajikistani Somoni', code: 'TJS', symbol: 'SM' }, language: 'Tajik', continent: 'Asia', lat: 38.8610, lon: 71.2761 },
+  { name: 'Thailand', code: 'th', capital: 'Bangkok', population: 69950000, area: 513120, currency: { name: 'Thai Baht', code: 'THB', symbol: '฿' }, language: 'Thai', continent: 'Asia', lat: 15.8700, lon: 100.9925 },
+  { name: 'Turkey', code: 'tr', capital: 'Ankara', population: 84339000, area: 783356, currency: { name: 'Turkish Lira', code: 'TRY', symbol: '₺' }, language: 'Turkish', continent: 'Asia', lat: 38.9637, lon: 35.2433 },
+  { name: 'Turkmenistan', code: 'tm', capital: 'Ashgabat', population: 6118000, area: 488100, currency: { name: 'Turkmenistani Manat', code: 'TMT', symbol: 'T' }, language: 'Turkmen', continent: 'Asia', lat: 38.9697, lon: 59.5563 },
+  { name: 'United Arab Emirates', code: 'ae', capital: 'Abu Dhabi', population: 9770000, area: 83600, currency: { name: 'UAE Dirham', code: 'AED', symbol: 'د.إ' }, language: 'Arabic', continent: 'Asia', lat: 23.4241, lon: 53.8478 },
+  { name: 'Uzbekistan', code: 'uz', capital: 'Tashkent', population: 35300000, area: 448978, currency: { name: 'Uzbekistani Soʻm', code: 'UZS', symbol: 'soʻm' }, language: 'Uzbek', continent: 'Asia', lat: 41.3775, lon: 64.5853 },
+  { name: 'Vietnam', code: 'vn', capital: 'Hanoi', population: 97339000, area: 331212, currency: { name: 'Vietnamese Đồng', code: 'VND', symbol: '₫' }, language: 'Vietnamese', continent: 'Asia', lat: 14.0583, lon: 108.2772 },
   { name: 'Yemen', code: 'ye', capital: 'Sana\'a', population: 33696000, area: 527968, currency: { name: 'Yemeni Rial', code: 'YER', symbol: '﷼' }, language: 'Arabic', continent: 'Asia', lat: 15.5527, lon: 48.5164 },
 
   // Europe
   { name: 'Albania', code: 'al', capital: 'Tirana', population: 2837000, area: 28748, currency: { name: 'Albanian Lek', code: 'ALL', symbol: 'L' }, language: 'Albanian', continent: 'Europe', lat: 41.1533, lon: 20.1683 },
-  { name: 'Austria', code: 'at', capital: 'Vienna', population: 9042000, area: 83871, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'German', continent: 'Europe', lat: 47.5162, lon: 14.5501 },
-  { name: 'Belarus', code: 'by', capital: 'Minsk', population: 9450000, area: 207600, currency: { name: 'Belarusian Ruble', code: 'BYN', symbol: 'Br' }, language: 'Belarusian', continent: 'Europe', lat: 53.7098, lon: 27.9534 },
+  { name: 'Austria', code: 'at', capital: 'Vienna', population: 9043000, area: 83871, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'German', continent: 'Europe', lat: 47.5162, lon: 14.5501 },
+  { name: 'Belarus', code: 'by', capital: 'Minsk', population: 9449000, area: 207600, currency: { name: 'Belarusian Ruble', code: 'BYN', symbol: 'Br' }, language: 'Belarusian', continent: 'Europe', lat: 53.7098, lon: 27.9534 },
   { name: 'Belgium', code: 'be', capital: 'Brussels', population: 11590000, area: 30528, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Dutch', continent: 'Europe', lat: 50.5039, lon: 4.4699 },
-  { name: 'Bosnia and Herzegovina', code: 'ba', capital: 'Sarajevo', population: 3531000, area: 51197, currency: { name: 'Bosnia and Herzegovina Convertible Mark', code: 'BAM', symbol: 'KM' }, language: 'Bosnian', continent: 'Europe', lat: 43.9159, lon: 17.6791 },
   { name: 'Bulgaria', code: 'bg', capital: 'Sofia', population: 6520000, area: 110879, currency: { name: 'Bulgarian Lev', code: 'BGN', symbol: 'лв' }, language: 'Bulgarian', continent: 'Europe', lat: 42.7339, lon: 25.4858 },
   { name: 'Croatia', code: 'hr', capital: 'Zagreb', population: 4047000, area: 56594, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Croatian', continent: 'Europe', lat: 45.1000, lon: 15.2000 },
-  { name: 'Czech Republic', code: 'cz', capital: 'Prague', population: 10700000, area: 78866, currency: { name: 'Czech Koruna', code: 'CZK', symbol: 'Kč' }, language: 'Czech', continent: 'Europe', lat: 49.8175, lon: 15.4730 },
-  { name: 'Denmark', code: 'dk', capital: 'Copenhagen', population: 5873000, area: 43094, currency: { name: 'Danish Krone', code: 'DKK', symbol: 'kr' }, language: 'Danish', continent: 'Europe', lat: 56.2639, lon: 9.5018 },
-  { name: 'Estonia', code: 'ee', capital: 'Tallinn', population: 1330000, area: 45228, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Estonian', continent: 'Europe', lat: 58.5953, lon: 25.0136 },
-  { name: 'Finland', code: 'fi', capital: 'Helsinki', population: 5545000, area: 338424, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Finnish', continent: 'Europe', lat: 61.9241, lon: 25.7482 },
-  { name: 'France', code: 'fr', capital: 'Paris', population: 67390000, area: 551695, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'French', continent: 'Europe', lat: 46.2276, lon: 2.2137 },
-  { name: 'Germany', code: 'de', capital: 'Berlin', population: 83200000, area: 357114, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'German', continent: 'Europe', lat: 51.1657, lon: 10.4515 },
-  { name: 'Greece', code: 'gr', capital: 'Athens', population: 10720000, area: 131957, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Greek', continent: 'Europe', lat: 39.0742, lon: 21.8243 },
-  { name: 'Hungary', code: 'hu', capital: 'Budapest', population: 9730000, area: 93028, currency: { name: 'Hungarian Forint', code: 'HUF', symbol: 'Ft' }, language: 'Hungarian', continent: 'Europe', lat: 47.1625, lon: 19.5033 },
-  { name: 'Iceland', code: 'is', capital: 'Reykjavík', population: 366000, area: 103000, currency: { name: 'Icelandic Króna', code: 'ISK', symbol: 'kr' }, language: 'Icelandic', continent: 'Europe', lat: 64.9631, lon: -19.0208 },
-  { name: 'Ireland', code: 'ie', capital: 'Dublin', population: 5060000, area: 70273, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'English', continent: 'Europe', lat: 53.1424, lon: -7.6921 },
-  { name: 'Italy', code: 'it', capital: 'Rome', population: 60360000, area: 301340, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Italian', continent: 'Europe', lat: 41.8719, lon: 12.5674 },
-  { name: 'Latvia', code: 'lv', capital: 'Riga', population: 1848000, area: 64589, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Latvian', continent: 'Europe', lat: 56.8796, lon: 24.6032 },
-  { name: 'Lithuania', code: 'lt', capital: 'Vilnius', population: 2794000, area: 65300, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Lithuanian', continent: 'Europe', lat: 55.1694, lon: 23.8813 },
-  { name: 'Luxembourg', code: 'lu', capital: 'Luxembourg City', population: 634730, area: 2586, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Luxembourgish', continent: 'Europe', lat: 49.8153, lon: 6.1296 },
-  { name: 'Moldova', code: 'md', capital: 'Chișinău', population: 2617000, area: 33846, currency: { name: 'Moldovan Leu', code: 'MDL', symbol: 'L' }, language: 'Moldovan', continent: 'Europe', lat: 47.4116, lon: 28.3699 },
-  { name: 'Netherlands', code: 'nl', capital: 'Amsterdam', population: 17440000, area: 41543, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Dutch', continent: 'Europe', lat: 52.1326, lon: 5.2913 },
-  { name: 'Norway', code: 'no', capital: 'Oslo', population: 5391000, area: 323802, currency: { name: 'Norwegian Krone', code: 'NOK', symbol: 'kr' }, language: 'Norwegian', continent: 'Europe', lat: 60.4720, lon: 8.4689 },
-  { name: 'Poland', code: 'pl', capital: 'Warsaw', population: 37950000, area: 312679, currency: { name: 'Polish Złoty', code: 'PLN', symbol: 'zł' }, language: 'Polish', continent: 'Europe', lat: 51.9194, lon: 19.1451 },
+  { name: 'Czech Republic', code: 'cz', capital: 'Prague', population: 10900000, area: 78867, currency: { name: 'Czech Koruna', code: 'CZK', symbol: 'Kč' }, language: 'Czech', continent: 'Europe', lat: 49.8175, lon: 15.4730 },
+  { name: 'Denmark', code: 'dk', capital: 'Copenhagen', population: 5831000, area: 42924, currency: { name: 'Danish Krone', code: 'DKK', symbol: 'kr' }, language: 'Danish', continent: 'Europe', lat: 56.2639, lon: 9.5018 },
+  { name: 'Finland', code: 'fi', capital: 'Helsinki', population: 5533000, area: 338145, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Finnish', continent: 'Europe', lat: 61.9241, lon: 25.7482 },
+  { name: 'France', code: 'fr', capital: 'Paris', population: 67757000, area: 551695, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'French', continent: 'Europe', lat: 46.2276, lon: 2.2137 },
+  { name: 'Germany', code: 'de', capital: 'Berlin', population: 83240000, area: 357114, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'German', continent: 'Europe', lat: 51.1657, lon: 10.4515 },
+  { name: 'Greece', code: 'gr', capital: 'Athens', population: 10724000, area: 131957, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Greek', continent: 'Europe', lat: 39.0742, lon: 21.8243 },
+  { name: 'Hungary', code: 'hu', capital: 'Budapest', population: 9749000, area: 93028, currency: { name: 'Hungarian Forint', code: 'HUF', symbol: 'Ft' }, language: 'Hungarian', continent: 'Europe', lat: 47.1625, lon: 19.5033 },
+  { name: 'Ireland', code: 'ie', capital: 'Dublin', population: 5123000, area: 70273, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'English', continent: 'Europe', lat: 53.4129, lon: -8.2439 },
+  { name: 'Italy', code: 'it', capital: 'Rome', population: 60317000, area: 301340, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Italian', continent: 'Europe', lat: 41.8719, lon: 12.5674 },
+  { name: 'Netherlands', code: 'nl', capital: 'Amsterdam', population: 17590000, area: 41543, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Dutch', continent: 'Europe', lat: 52.1326, lon: 5.2913 },
+  { name: 'Norway', code: 'no', capital: 'Oslo', population: 5391000, area: 385207, currency: { name: 'Norwegian Krone', code: 'NOK', symbol: 'kr' }, language: 'Norwegian', continent: 'Europe', lat: 60.4720, lon: 8.4689 },
+  { name: 'Poland', code: 'pl', capital: 'Warsaw', population: 37950000, area: 312696, currency: { name: 'Polish Złoty', code: 'PLN', symbol: 'zł' }, language: 'Polish', continent: 'Europe', lat: 51.9194, lon: 19.1451 },
   { name: 'Portugal', code: 'pt', capital: 'Lisbon', population: 10290000, area: 92212, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Portuguese', continent: 'Europe', lat: 39.3999, lon: -8.2245 },
-  { name: 'Romania', code: 'ro', capital: 'Bucharest', population: 19290000, area: 238397, currency: { name: 'Romanian Leu', code: 'RON', symbol: 'lei' }, language: 'Romanian', continent: 'Europe', lat: 45.9432, lon: 24.9668 },
-  { name: 'Russia', code: 'ru', capital: 'Moscow', population: 144100000, area: 17098242, currency: { name: 'Russian Ruble', code: 'RUB', symbol: '₽' }, language: 'Russian', continent: 'Europe', lat: 61.5240, lon: 105.3188 },
-  { name: 'Serbia', code: 'rs', capital: 'Belgrade', population: 6950000, area: 77474, currency: { name: 'Serbian Dinar', code: 'RSD', symbol: 'din' }, language: 'Serbian', continent: 'Europe', lat: 44.0165, lon: 21.0059 },
+  { name: 'Romania', code: 'ro', capital: 'Bucharest', population: 19237000, area: 238397, currency: { name: 'Romanian Leu', code: 'RON', symbol: 'lei' }, language: 'Romanian', continent: 'Europe', lat: 45.9432, lon: 24.9668 },
+  { name: 'Russia', code: 'ru', capital: 'Moscow', population: 145478000, area: 17098242, currency: { name: 'Russian Ruble', code: 'RUB', symbol: '₽' }, language: 'Russian', continent: 'Europe', lat: 61.5240, lon: 105.3188 },
+  { name: 'Serbia', code: 'rs', capital: 'Belgrade', population: 6805000, area: 77474, currency: { name: 'Serbian Dinar', code: 'RSD', symbol: 'дин' }, language: 'Serbian', continent: 'Europe', lat: 44.0165, lon: 21.0059 },
   { name: 'Slovakia', code: 'sk', capital: 'Bratislava', population: 5460000, area: 49035, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Slovak', continent: 'Europe', lat: 48.6690, lon: 19.6990 },
-  { name: 'Slovenia', code: 'si', capital: 'Ljubljana', population: 2108000, area: 20271, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Slovenian', continent: 'Europe', lat: 46.1512, lon: 14.9955 },
-  { name: 'Spain', code: 'es', capital: 'Madrid', population: 47350000, area: 505990, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Spanish', continent: 'Europe', lat: 40.4637, lon: -3.7492 },
-  { name: 'Sweden', code: 'se', capital: 'Stockholm', population: 10380000, area: 450295, currency: { name: 'Swedish Krona', code: 'SEK', symbol: 'kr' }, language: 'Swedish', continent: 'Europe', lat: 60.1282, lon: 18.6435 },
-  { name: 'Switzerland', code: 'ch', capital: 'Bern', population: 8570000, area: 41285, currency: { name: 'Swiss Franc', code: 'CHF', symbol: 'Fr' }, language: 'German', continent: 'Europe', lat: 46.8182, lon: 8.2275 },
-  { name: 'Ukraine', code: 'ua', capital: 'Kyiv', population: 43500000, area: 603550, currency: { name: 'Ukrainian Hryvnia', code: 'UAH', symbol: '₴' }, language: 'Ukrainian', continent: 'Europe', lat: 48.3794, lon: 31.1656 },
-  { name: 'United Kingdom', code: 'gb', capital: 'London', population: 67220000, area: 242495, currency: { name: 'Pound Sterling', code: 'GBP', symbol: '£' }, language: 'English', continent: 'Europe', lat: 55.3781, lon: -3.4360 },
+  { name: 'Spain', code: 'es', capital: 'Madrid', population: 47351000, area: 505990, currency: { name: 'Euro', code: 'EUR', symbol: '€' }, language: 'Spanish', continent: 'Europe', lat: 40.4637, lon: -3.7492 },
+  { name: 'Sweden', code: 'se', capital: 'Stockholm', population: 10353000, area: 450295, currency: { name: 'Swedish Krona', code: 'SEK', symbol: 'kr' }, language: 'Swedish', continent: 'Europe', lat: 60.1282, lon: 18.6435 },
+  { name: 'Switzerland', code: 'ch', capital: 'Bern', population: 8703000, area: 41285, currency: { name: 'Swiss Franc', code: 'CHF', symbol: 'Fr' }, language: 'German', continent: 'Europe', lat: 46.8182, lon: 8.2275 },
+  { name: 'Ukraine', code: 'ua', capital: 'Kyiv', population: 43469000, area: 603550, currency: { name: 'Ukrainian Hryvnia', code: 'UAH', symbol: '₴' }, language: 'Ukrainian', continent: 'Europe', lat: 48.3794, lon: 31.1656 },
+  { name: 'United Kingdom', code: 'gb', capital: 'London', population: 67215000, area: 242495, currency: { name: 'British Pound', code: 'GBP', symbol: '£' }, language: 'English', continent: 'Europe', lat: 55.3781, lon: -3.4360 },
 
   // Oceania
-  { name: 'Australia', code: 'au', capital: 'Canberra', population: 25690000, area: 7692024, currency: { name: 'Australian Dollar', code: 'AUD', symbol: '$' }, language: 'English', continent: 'Oceania', lat: -25.2744, lon: 133.7751 },
+  { name: 'Australia', code: 'au', capital: 'Canberra', population: 25921000, area: 7692024, currency: { name: 'Australian Dollar', code: 'AUD', symbol: '$' }, language: 'English', continent: 'Oceania', lat: -25.2744, lon: 133.7751 },
   { name: 'Fiji', code: 'fj', capital: 'Suva', population: 896000, area: 18272, currency: { name: 'Fijian Dollar', code: 'FJD', symbol: '$' }, language: 'English', continent: 'Oceania', lat: -17.7134, lon: 178.0650 },
   { name: 'New Zealand', code: 'nz', capital: 'Wellington', population: 5084000, area: 270467, currency: { name: 'New Zealand Dollar', code: 'NZD', symbol: '$' }, language: 'English', continent: 'Oceania', lat: -40.9006, lon: 174.8860 },
   { name: 'Papua New Guinea', code: 'pg', capital: 'Port Moresby', population: 9119000, area: 462840, currency: { name: 'Papua New Guinean Kina', code: 'PGK', symbol: 'K' }, language: 'English', continent: 'Oceania', lat: -6.3150, lon: 143.9555 },
@@ -173,15 +156,24 @@ export const COUNTRIES: Country[] = [
 export const COUNTRIES_BY_CODE: Record<string, Country> = {};
 COUNTRIES.forEach(c => { COUNTRIES_BY_CODE[c.code] = c; });
 
-// Search countries by name or capital
+// Ranked search: exact name > name starts with > capital starts with > name contains > capital contains
 export function searchCountries(query: string): Country[] {
-  if (!query.trim()) return [];
   const q = query.toLowerCase().trim();
-  return COUNTRIES.filter(
-    c =>
-      c.name.toLowerCase().includes(q) ||
-      c.capital.toLowerCase().includes(q)
-  ).slice(0, 12);
+  if (!q) return [];
+  const scored: { c: Country; score: number }[] = [];
+  COUNTRIES.forEach(c => {
+    const n = c.name.toLowerCase();
+    const k = c.capital.toLowerCase();
+    let score = 0;
+    if (n === q)             score = 100;
+    else if (n.startsWith(q)) score = 80;
+    else if (k === q)         score = 70;
+    else if (k.startsWith(q)) score = 60;
+    else if (n.includes(q))   score = 40;
+    else if (k.includes(q))   score = 30;
+    if (score > 0) scored.push({ c, score });
+  });
+  return scored.sort((a, b) => b.score - a.score).slice(0, 10).map(r => r.c);
 }
 
 // Find nearest country to lat/lon
@@ -192,23 +184,28 @@ export function findNearestCountry(lat: number, lon: number): Country | null {
     const dlat = c.lat - lat;
     const dlon = c.lon - lon;
     const dist = dlat * dlat + dlon * dlon;
-    if (dist < minDist) {
-      minDist = dist;
-      nearest = c;
-    }
+    if (dist < minDist) { minDist = dist; nearest = c; }
   });
   return nearest;
 }
 
 export function formatPopulation(n: number): string {
   if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(2)}B`;
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
-  return n.toString();
+  if (n >= 1_000_000)     return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)         return `${(n / 1_000).toFixed(0)}K`;
+  return n.toLocaleString();
+}
+
+export function formatPopulationFull(n: number): string {
+  return n.toLocaleString();
 }
 
 export function formatArea(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(2)}M km²`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K km²`;
-  return `${n} km²`;
+  if (n >= 1_000)     return `${(n / 1_000).toFixed(0)}K km²`;
+  return `${n.toLocaleString()} km²`;
+}
+
+export function formatAreaFull(n: number): string {
+  return `${n.toLocaleString()} km²`;
 }

@@ -1,0 +1,186 @@
+Earth in Your Pocket has reached a stable, high-performance state. The app currently runs smoothly at approximately 60 FPS with an interactive 3D globe, realistic Earth textures, country borders, search, country highlighting, and detailed country information.
+
+The objective of this update is NOT to redesign the application.
+
+The objective is to make it feel like a premium, flagship mobile application while preserving the current architecture, smooth performance, and existing functionality.
+
+====================================================
+PERFORMANCE (Highest Priority)
+====================================================
+
+• Maintain the current smooth 60 FPS performance.
+• Do not introduce frame drops.
+• Do not reduce rendering quality.
+• Do not remove any existing features.
+• Preserve all existing touch gestures.
+
+====================================================
+GLOBE IMPROVEMENTS
+====================================================
+
+Improve realism even further.
+
+• Add a dynamic day/night lighting effect based on the sun direction.
+• Add slowly moving cloud layers with subtle transparency.
+• Improve atmospheric glow around Earth.
+• Increase realism of ocean reflections.
+• Add subtle city lights visible on the night side.
+• Slightly improve starfield depth using different star sizes and brightness.
+
+====================================================
+COUNTRY SELECTION
+====================================================
+
+Improve interactions.
+
+When a country is selected:
+
+• Smoothly rotate the globe to center the selected country.
+• Add a cinematic camera animation instead of instantly jumping.
+• Keep the existing emerald highlight.
+• Make the highlight softly pulse once after selection.
+• Add subtle haptic feedback.
+• Slightly enlarge the selected country marker.
+
+====================================================
+SEARCH EXPERIENCE
+====================================================
+
+Improve search usability.
+
+• Instant search while typing.
+• Better search ranking.
+• Highlight matching letters.
+• Show recent searches.
+• Smooth dropdown animation.
+• Preserve current design.
+
+====================================================
+COUNTRY DETAIL PAGE
+====================================================
+
+Improve readability.
+
+• Format population with commas.
+• Format area using km².
+• Display currency symbol and ISO code.
+• Add icons for every information tile.
+• Improve spacing.
+• Add a subtle fade-in animation.
+• Improve typography hierarchy.
+
+====================================================
+HOME SCREEN
+====================================================
+
+Keep the current layout.
+
+Enhance only:
+
+• Better glassmorphism on the floating search bar.
+• Softer shadows.
+• Premium blur effects.
+• Better card animations.
+• Slightly smoother transitions.
+
+====================================================
+FIRST TIME USER EXPERIENCE
+====================================================
+
+Only the first time the app opens:
+
+Display three elegant onboarding cards.
+
+Card 1
+🌍 Rotate the Earth
+Drag to explore the world.
+
+Card 2
+🔍 Search Countries
+Find countries or capitals instantly.
+
+Card 3
+📖 Learn
+Tap any country to discover facts.
+
+Allow users to skip onboarding.
+
+Never show onboarding again after completion.
+
+====================================================
+MICRO-ANIMATIONS
+====================================================
+
+Add premium micro interactions.
+
+• Buttons scale slightly when tapped.
+• Cards animate naturally.
+• Search bar expands smoothly.
+• Country preview slides naturally.
+• Navigation transitions feel fluid.
+
+====================================================
+APP ICON
+====================================================
+
+Create a premium app icon.
+
+Requirements:
+
+• Dark space background
+• Realistic Earth
+• Emerald glow
+• Clean modern design
+• Easily recognizable
+• Suitable for Google Play
+
+====================================================
+SPLASH SCREEN
+====================================================
+
+Keep the cinematic splash.
+
+Enhance with:
+
+• Better fade timing.
+• Slightly slower Earth rotation.
+• Improved glow.
+• Small shooting stars appearing occasionally.
+• More cinematic entrance animation.
+
+====================================================
+ACCESSIBILITY
+====================================================
+
+Improve accessibility.
+
+• Larger touch targets.
+• Better contrast.
+• Dynamic font scaling.
+• Screen reader labels where appropriate.
+
+====================================================
+CODE QUALITY
+====================================================
+
+Refactor only where necessary.
+
+• Keep reusable components.
+• Preserve architecture.
+• Keep clean code.
+• Do not duplicate logic.
+• Keep everything modular.
+
+====================================================
+IMPORTANT
+====================================================
+
+Do NOT redesign the application.
+
+Do NOT remove any existing functionality.
+
+Do NOT sacrifice performance for visuals.
+
+This update should feel like moving from Version 1.0 to Version 1.5.
+
+The app should feel polished enough that users immediately recognize it as a premium mobile application suitable for publishing on the Google Play Store.

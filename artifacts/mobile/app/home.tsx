@@ -1,8 +1,17 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Animated, {
   FadeIn,
   FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
@@ -10,26 +19,28 @@ import { Ionicons } from '@expo/vector-icons';
 import { GlobeView } from '@/components/GlobeView';
 import { SearchBar } from '@/components/SearchBar';
 import { CountryPreviewCard } from '@/components/CountryPreviewCard';
+import { OnboardingModal, useOnboarding } from '@/components/OnboardingModal';
 import { useColors } from '@/hooks/useColors';
 import { Country, findNearestCountry } from '@/constants/countries';
 
 export default function HomeScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const { show: showOnboarding, complete: completeOnboarding } = useOnboarding();
 
-  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [selectedCountry, setSelectedCountry]     = useState<Country | null>(null);
   const [globeSelectedLatLon, setGlobeSelectedLatLon] = useState<{ lat: number; lon: number } | null>(null);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [globeReady, setGlobeReady] = useState(false);
-  const [tapHint, setTapHint] = useState(true);
+  const [isSearchFocused, setIsSearchFocused]     = useState(false);
+  const [globeReady, setGlobeReady]               = useState(false);
+  const [tapHint, setTapHint]                     = useState(true);
 
-  const topInset = Platform.OS === 'web' ? 67 : insets.top;
+  const topInset    = Platform.OS === 'web' ? 67 : insets.top;
   const bottomInset = Platform.OS === 'web' ? 34 : insets.bottom;
 
   const handleCountryTap = useCallback((lat: number, lon: number) => {
     const country = findNearestCountry(lat, lon);
     if (country) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       setSelectedCountry(country);
       setGlobeSelectedLatLon({ lat: country.lat, lon: country.lon });
       setTapHint(false);
@@ -50,7 +61,7 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Globe — full screen */}
+      {/* Full-screen globe */}
       <View style={StyleSheet.absoluteFill}>
         <GlobeView
           autoRotate={!selectedCountry}
@@ -61,23 +72,28 @@ export default function HomeScreen() {
         />
       </View>
 
-      {/* Top UI — Search bar */}
+      {/* Top UI */}
       <View
-        style={[
-          styles.topArea,
-          { paddingTop: topInset + 8, paddingHorizontal: 16 },
-        ]}
-        pointerEvents={isSearchFocused ? 'box-none' : 'box-none'}
+        style={[styles.topArea, { paddingTop: topInset + 8, paddingHorizontal: 16 }]}
       >
         {/* Logo row */}
         {!isSearchFocused && (
-          <Animated.View entering={FadeIn.duration(400)} exiting={FadeOut.duration(200)} style={styles.logoRow}>
+          <Animated.View
+            entering={FadeIn.duration(400)}
+            exiting={FadeOut.duration(200)}
+            style={styles.logoRow}
+          >
             <View style={[styles.logoDot, { backgroundColor: colors.primary }]} />
-            <Text style={[styles.logoText, { color: colors.foreground }]}>Earth in Your Pocket</Text>
+            <Text
+              style={[styles.logoText, { color: colors.foreground }]}
+              accessibilityRole="header"
+            >
+              Earth in Your Pocket
+            </Text>
           </Animated.View>
         )}
 
-        {/* Search */}
+        {/* Search bar */}
         <SearchBar
           onSelectCountry={handleSelectFromSearch}
           onFocusChange={setIsSearchFocused}
@@ -87,12 +103,12 @@ export default function HomeScreen() {
       {/* Tap hint */}
       {tapHint && globeReady && !isSearchFocused && !selectedCountry && (
         <Animated.View
-          entering={FadeIn.delay(800).duration(600)}
+          entering={FadeIn.delay(900).duration(700)}
           exiting={FadeOut.duration(300)}
           style={styles.tapHint}
           pointerEvents="none"
         >
-          <View style={[styles.tapHintPill, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <View style={[styles.tapHintPill, { backgroundColor: 'rgba(13,27,46,0.85)', borderColor: colors.border }]}>
             <Ionicons name="finger-print-outline" size={14} color={colors.primary} />
             <Text style={[styles.tapHintText, { color: colors.foregroundSecondary }]}>
               Tap the globe to explore
@@ -101,7 +117,7 @@ export default function HomeScreen() {
         </Animated.View>
       )}
 
-      {/* Bottom — Country preview card */}
+      {/* Country preview card */}
       <View style={[styles.bottomArea, { paddingBottom: bottomInset + 12 }]}>
         {selectedCountry && (
           <CountryPreviewCard
@@ -111,19 +127,20 @@ export default function HomeScreen() {
           />
         )}
       </View>
+
+      {/* First-time onboarding */}
+      {showOnboarding && (
+        <OnboardingModal onComplete={completeOnboarding} />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   topArea: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
+    top: 0, left: 0, right: 0,
     gap: 10,
     zIndex: 10,
   },
@@ -141,24 +158,23 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 13,
     fontFamily: 'Inter_600SemiBold',
-    letterSpacing: 0.3,
-    opacity: 0.85,
+    letterSpacing: 0.4,
+    opacity: 0.9,
   },
   tapHint: {
     position: 'absolute',
     bottom: 200,
-    left: 0,
-    right: 0,
+    left: 0, right: 0,
     alignItems: 'center',
     zIndex: 5,
   },
   tapHintPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    gap: 7,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: 22,
     borderWidth: 1,
   },
   tapHintText: {
@@ -167,9 +183,7 @@ const styles = StyleSheet.create({
   },
   bottomArea: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    bottom: 0, left: 0, right: 0,
     zIndex: 10,
   },
 });
