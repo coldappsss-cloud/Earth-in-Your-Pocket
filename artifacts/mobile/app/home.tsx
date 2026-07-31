@@ -17,7 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
-import { GlobeView } from '@/components/GlobeView';
+import { GlobeView, SceneMode } from '@/components/GlobeView';
 import { SearchBar } from '@/components/SearchBar';
 import { CountryPreviewCard } from '@/components/CountryPreviewCard';
 import { OnboardingModal, useOnboarding } from '@/components/OnboardingModal';
@@ -36,6 +36,10 @@ export default function HomeScreen() {
   const [tapHint, setTapHint]                     = useState(true);
   // Pause the globe's render loop while the detail screen covers this one.
   const [isFocused, setIsFocused]                 = useState(true);
+  // TEMPORARY DEV-ONLY: lets Space Mode be exercised in Expo Go before there
+  // is any real user-facing entry point. Remove before release — see the
+  // __DEV__-gated toggle button below.
+  const [sceneMode, setSceneMode]                 = useState<SceneMode>('earth');
 
   useFocusEffect(
     useCallback(() => {
@@ -74,6 +78,7 @@ export default function HomeScreen() {
       {/* Full-screen globe */}
       <View style={StyleSheet.absoluteFill}>
         <GlobeView
+          mode={sceneMode}
           autoRotate={!selectedCountry}
           interactive
           active={isFocused}
@@ -142,6 +147,27 @@ export default function HomeScreen() {
       {showOnboarding && (
         <OnboardingModal onComplete={completeOnboarding} />
       )}
+
+      {/* TEMPORARY DEV-ONLY TOGGLE — Space Mode has no user-facing entry
+          point yet. This button only renders in development builds
+          (__DEV__ is stripped from production/release bundles) and exists
+          solely so Space Mode can be exercised on a real device via Expo Go.
+          Remove this block, the `sceneMode` state above, and the `mode`
+          prop wiring on <GlobeView> once a real UI for switching modes
+          exists (or before shipping, whichever comes first). */}
+      {__DEV__ && (
+        <Pressable
+          onPress={() => setSceneMode(m => (m === 'earth' ? 'space' : 'earth'))}
+          style={[
+            styles.devModeToggle,
+            { top: topInset + 8, backgroundColor: 'rgba(0,0,0,0.65)' },
+          ]}
+        >
+          <Text style={styles.devModeToggleText}>
+            DEV: {sceneMode === 'earth' ? 'Earth' : 'Space'} (tap to switch)
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -195,5 +221,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0, left: 0, right: 0,
     zIndex: 10,
+  },
+  // TEMPORARY DEV-ONLY — see the __DEV__ block above. Remove alongside it.
+  devModeToggle: {
+    position: 'absolute',
+    right: 12,
+    zIndex: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  devModeToggleText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontFamily: 'Inter_600SemiBold',
   },
 });
