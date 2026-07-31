@@ -1,14 +1,17 @@
 /**
- * Space Mode — the deep-space environment.
+ * Space Mode — the deep-space environment plus the Solar System.
  *
- * This is the foundation the Solar System will be built inside. It contains
- * the environment and the lighting only: no planets, no labels, no panels.
+ * View-only: no picking, no fly-to, no labels, no panels. The Sun and eight
+ * planets (built by the `Planets` module) sit inside the environment this
+ * module owns — the starfield, the faint galactic backdrop, and the lighting.
  *
  * Design decisions worth knowing before extending it:
  *
- * 1. Scale. One world unit is treated as roughly 1000 km. The camera near/far
- *    planes are set wide enough for planetary distances without z-fighting at
- *    close range, which is why the near plane is 1 rather than 0.1.
+ * 1. Scale. One world unit is treated as roughly 1000 km, but the Solar System
+ *    itself is laid out for legibility, not accuracy — see `planets.ts`. The
+ *    camera near/far planes are set wide enough for planetary distances
+ *    without z-fighting at close range, which is why the near plane is 1
+ *    rather than 0.1.
  *
  * 2. The starfield is a single THREE.Points with custom attributes, so several
  *    thousand stars cost one draw call. Colour temperature, size and twinkle
@@ -18,9 +21,11 @@
  * 3. Stars sit on a far shell and never move relative to the camera target, so
  *    they read as infinitely distant.
  *
- * 4. Lighting is a single sun-like directional key plus a near-black ambient.
- *    Planets added later should use physically plausible materials and will be
- *    lit correctly with no lighting changes.
+ * 4. Lighting is a THREE.PointLight at the Sun's position (the world origin)
+ *    plus a near-black ambient. A point light — not a directional one — is
+ *    what makes each planet's day/night terminator point radially away from
+ *    the Sun rather than all planets being lit from the same absolute
+ *    direction regardless of where they sit in the system.
  *
  * 5. Anything numbering in the thousands — asteroids, satellites, debris —
  *    must use InstancedMesh or Points. Individual meshes will not scale.
@@ -187,27 +192,37 @@ var SpaceMode = (function(){
   }
 
   // Distance the pinch gesture started from.
-  var pinchD0 = 900;
+  var pinchD0 = 6200;
+  var solarSystem = null;
 
   function init(ctx){
     var pr = Math.min(window.devicePixelRatio, 2);
     scene.add(buildBackdrop());
     scene.add(buildStarfield(pr));
 
-    // Sun-like key light. Direction, not position, is what matters for a
-    // directional light, but the long throw keeps it obvious in the inspector.
-    var sun = new THREE.DirectionalLight(0xFFF4E2, 1.7);
-    sun.position.set(1, 0.22, 0.55).normalize().multiplyScalar(50000);
+    solarSystem = Planets.build(scene);
+
+    // Sun-like key light: a point light at the Sun's position (the world
+    // origin), not a directional light. A directional light shines from one
+    // absolute direction everywhere in the scene, which would light every
+    // planet's near side identically regardless of where it sits around the
+    // Sun. A point light at the origin makes each planet's lit hemisphere
+    // point radially away from the Sun, which is what a real orbiting body
+    // looks like. Falloff (decay 1, physically-correct-ish) is calibrated so
+    // Neptune's orbit (radius ~1480) still reads as lit, not black.
+    var sun = new THREE.PointLight(0xFFF4E2, 3.4, 0, 1);
+    sun.position.set(0, 0, 0);
     scene.add(sun);
 
     // Near-black fill: space has almost no bounce light, but a pure zero
     // ambient makes unlit hemispheres read as holes rather than as shadow.
-    scene.add(new THREE.AmbientLight(0x0B1220, 0.55));
+    scene.add(new THREE.AmbientLight(0x0B1220, 0.35));
   }
 
   function update(dt, elapsed){
     // One uniform write per frame drives every star's twinkle.
     starMaterial.uniforms.uTime.value = elapsed;
+    Planets.update(dt, elapsed, solarSystem);
   }
 
   return {
@@ -215,13 +230,18 @@ var SpaceMode = (function(){
     init: init,
     update: update,
 
-    // Free orbit. Distance range spans close-in framing to a wide system view.
-    // Pitch stops just short of the poles so the up vector never flips.
+    // Free orbit. Default framing sits back far enough to show the whole
+    // system on a narrow (portrait) phone screen: with a 50 deg vertical FOV,
+    // a portrait aspect ratio gives a horizontal half-angle of roughly 15 deg,
+    // so the camera needs distance * tan(15 deg) >= outermost orbit radius
+    // (1480) + Neptune's visual radius (27) to keep Neptune's orbit fully
+    // in frame horizontally — hence a distance well past that minimum.
+    // Distance/pitch limits still allow zooming in to a single planet.
     cameraProfile: {
       fov: 50, near: 1, far: 40000,
-      yaw: 0, pitch: 0.18, distance: 900,
+      yaw: 0.6, pitch: 0.30, distance: 6200,
       limits: {
-        minDistance: 60, maxDistance: 9000,
+        minDistance: 60, maxDistance: 12000,
         minPitch: -1.45, maxPitch: 1.45,
         lockOrbit: false
       },

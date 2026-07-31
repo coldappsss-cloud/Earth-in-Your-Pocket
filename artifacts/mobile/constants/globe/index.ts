@@ -16,6 +16,7 @@ import { INPUT_JS } from './input';
 import { ENGINE_JS } from './engine';
 import { TRANSITION_JS } from './transition';
 import { EARTH_MODE_JS } from './earthMode';
+import { PLANETS_JS } from './planets';
 import { SPACE_MODE_JS } from './spaceMode';
 import { BOOT_JS } from './boot';
 
@@ -27,6 +28,7 @@ const ENGINE_SOURCE = [
   ENGINE_JS,
   TRANSITION_JS,
   EARTH_MODE_JS,
+  PLANETS_JS,
   SPACE_MODE_JS,
   BOOT_JS,
 ].join('\n');
