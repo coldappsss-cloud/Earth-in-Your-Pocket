@@ -20,6 +20,8 @@ interface GlobeViewProps {
   onModeChange?: (mode: SceneMode) => void;
   onTransitionStart?: (from: SceneMode, to: SceneMode) => void;
   onTransitionEnd?: (mode: SceneMode) => void;
+  /** Fired when Space Mode's camera crosses into "too close to the Sun". */
+  onSunProximity?: () => void;
   selectedLatLon?: { lat: number; lon: number } | null;
 }
 
@@ -42,6 +44,7 @@ export function GlobeView({
   onModeChange,
   onTransitionStart,
   onTransitionEnd,
+  onSunProximity,
   selectedLatLon,
 }: GlobeViewProps) {
   const webviewRef = useRef<WebView>(null);
@@ -118,6 +121,8 @@ export function GlobeView({
         onTransitionStart?.(data.from, data.to);
       } else if (data.type === 'transitionEnd' && data.mode) {
         onTransitionEnd?.(data.mode);
+      } else if (data.type === 'sunProximity') {
+        onSunProximity?.();
       }
     } catch {
       // ignore parse errors

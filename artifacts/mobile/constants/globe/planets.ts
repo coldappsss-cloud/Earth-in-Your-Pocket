@@ -40,6 +40,36 @@
  *    constant tilt, and the mesh inside it advances `rotation.y` every frame.
  *    Saturn's ring hangs off the same pivot, tilted with the planet but never
  *    spinning with it — rings do not rotate with the planet's day/night cycle.
+ *
+ * Readability pass (v3): sizes and shading were retuned for legibility on a
+ * phone screen, and natural satellites plus a reworked Sun were added.
+ *
+ * 6. Inner-planet radii were increased well past their v2 values so Mercury,
+ *    Venus, Earth and Mars are easy to pick out at a glance, while keeping
+ *    Jupiter first and Saturn second in visual size (see DATA below) — this
+ *    is a legibility pass, not an accuracy one.
+ *
+ * 7. Moons reuse the exact same building blocks as planets: the same unit
+ *    sphere, the same per-family fragment shaders (rocky for most moons,
+ *    clouds for hazy Titan), and the same buildPlanetMaterial/PLANET_HEADER
+ *    pipeline, just at a smaller scale. A moon never gets a shader family of
+ *    its own. Each moon's sun-direction and light-falloff uniforms are the
+ *    same Vector3/number the parent planet already computed, so a moon
+ *    orbiting a planet is lit consistently with it for free.
+ *
+ * 8. A moon's orbit is plain Object3D nesting, not per-frame trigonometry: an
+ *    orbit pivot (child of the planet's tilt pivot, so it shares the tilt but
+ *    never the planet's day/night spin) has its rotation.y advanced every
+ *    frame, and the moon mesh just sits at a fixed local offset inside it.
+ *    Orbit speeds are greatly accelerated versus real orbital periods so
+ *    motion reads as alive within a few seconds of watching, per design.
+ *
+ * 9. The Sun's fragment shader now also receives a world normal and view
+ *    direction (SUN_VERT previously passed neither) so it can add limb
+ *    darkening (real stars dim toward the visible edge) and bias its flare
+ *    "prominences" toward that same edge, plus a second, higher-frequency
+ *    noise octave for small-scale granulation — all in the same single draw
+ *    call, no extra geometry or textures.
  */
 export const PLANETS_JS = `
 var Planets = (function(){
@@ -106,13 +136,21 @@ var Planets = (function(){
     return new THREE.Vector3(((hex>>16)&255)/255, ((hex>>8)&255)/255, (hex&255)/255);
   }
 
-  // ── Family: rocky (Mercury, Mars) — crater noise, optional polar caps ──
+  // ── Family: rocky (Mercury, Mars, and every rocky/icy moon) — crater
+  // noise, optional polar caps, and a small metallic specular term so
+  // Mercury (high uMetallic) reads as bare, sun-scoured metal-and-stone
+  // rather than flat matte rock, while Mars and most moons (near-zero
+  // uMetallic) stay dull. Craters get a second, sharper noise pass that
+  // darkens rims for actual pockmarking instead of soft blotches.
   function rockyFrag(poles){
     var body = [
       'uniform vec3 uColor;',
+      'uniform float uMetallic;',
       'void main(){',
       '  float terrain = fbm(vUv*16.0)*0.6 + fbm(vUv*55.0)*0.4;',
-      '  vec3 base = uColor * (0.55 + 0.7*terrain);'
+      '  float craterEdge = smoothstep(0.42, 0.50, fbm(vUv*34.0 + 5.2)) * (1.0 - smoothstep(0.50, 0.58, fbm(vUv*34.0 + 5.2)));',
+      '  vec3 base = uColor * (0.55 + 0.7*terrain);',
+      '  base *= (1.0 - craterEdge*0.35);'
     ];
     if (poles) {
       body.push(
@@ -121,8 +159,14 @@ var Planets = (function(){
       );
     }
     body.push(
-      '  float diffuse = max(dot(normalize(vNormalW), uSunDir), 0.0);',
-      '  vec3 lit = base * uLight * (0.05 + 0.95*diffuse);'
+      '  vec3 n = normalize(vNormalW);',
+      '  float diffuse = max(dot(n, uSunDir), 0.0);',
+      // Blinn-Phong-ish specular, gated by uMetallic so airless rocky moons
+      // stay dull while Mercury picks up small, sharp sunlit highlights —
+      // "metallic highlights", not a shiny plastic sphere.
+      '  vec3 halfV = normalize(uSunDir + normalize(vViewDir));',
+      '  float spec = pow(max(dot(n, halfV), 0.0), 22.0) * uMetallic * diffuse;',
+      '  vec3 lit = base * uLight * (0.05 + 0.95*diffuse) + vec3(1.0,0.98,0.92) * spec * 1.4;'
     );
     return [].concat(['precision mediump float;'], NOISE_GLSL, PLANET_HEADER, body, PLANET_FOOTER).join('\\n');
   }
@@ -149,12 +193,20 @@ var Planets = (function(){
   function earthFrag(){
     var body = [
       'void main(){',
-      '  float landMask = smoothstep(0.45, 0.55, fbm(vUv*5.0 + vec2(3.1,1.7)));',
-      '  vec3 ocean = vec3(0.035,0.16,0.42);',
-      '  vec3 land  = vec3(0.14,0.32,0.13);',
-      '  vec3 surface = mix(ocean, land, landMask);',
-      '  float clouds = smoothstep(0.55, 0.78, fbm(vUv*8.0 + vec2(uTime*0.025, uTime*0.01)));',
-      '  surface = mix(surface, vec3(0.92,0.94,0.97), clouds*0.6);',
+      '  float landMask = smoothstep(0.46, 0.54, fbm(vUv*5.0 + vec2(3.1,1.7)));',
+      // A second, higher-frequency noise field picks between two land tones
+      // (green lowland vs. sunbaked brown highland) instead of one flat
+      // green, and a sharper coastline threshold keeps the ocean/land edge
+      // crisp rather than smeared.
+      '  float terrainT = fbm(vUv*13.0 + vec2(9.4,2.2));',
+      '  vec3 ocean = vec3(0.03,0.15,0.44);',
+      '  vec3 oceanDeep = vec3(0.015,0.075,0.26);',
+      '  vec3 lowland = vec3(0.10,0.34,0.12);',
+      '  vec3 highland = vec3(0.36,0.28,0.14);',
+      '  vec3 land = mix(lowland, highland, smoothstep(0.4, 0.75, terrainT));',
+      '  vec3 surface = mix(mix(oceanDeep, ocean, smoothstep(0.30,0.46,fbm(vUv*5.0+vec2(3.1,1.7)))), land, landMask);',
+      '  float clouds = smoothstep(0.52, 0.76, fbm(vUv*8.0 + vec2(uTime*0.025, uTime*0.01)));',
+      '  surface = mix(surface, vec3(0.96,0.97,0.99), clouds*0.72);',
       '  float diffuse = max(dot(normalize(vNormalW), uSunDir), 0.0);',
       '  float night = 1.0 - smoothstep(0.0, 0.16, diffuse);',
       '  float cityNoise = step(0.965, hash(floor(vUv*230.0))) * landMask;',
@@ -184,9 +236,15 @@ var Planets = (function(){
     );
     if (hasSpot) {
       body.push(
+        // The spot's own edge is warped by a touch of fbm noise (instead of
+        // a perfect ellipse) so it reads as a swirling storm boundary, and
+        // the swirl noise sampled at the spot centre gives it its own
+        // internal turbulence rather than a flat fill.
         '  vec2 sd = (vUv - uSpot.yz) * vec2(2.3, 1.0);',
-        '  float spot = (1.0 - smoothstep(uSpot.w*0.65, uSpot.w, length(sd))) * uSpot.x;',
-        '  col = mix(col, uSpotColor, spot);'
+        '  float edgeWarp = fbm(vUv*9.0 + uTime*0.015) * 0.09;',
+        '  float spot = (1.0 - smoothstep(uSpot.w*0.62 + edgeWarp, uSpot.w + edgeWarp, length(sd))) * uSpot.x;',
+        '  float spotSwirl = fbm(sd*7.0 + uTime*0.05);',
+        '  col = mix(col, mix(uSpotColor, uSpotColor*1.25, spotSwirl), spot);'
       );
     }
     body.push(
@@ -205,34 +263,77 @@ var Planets = (function(){
   // name, family, orbit/spin/tilt as before, plus per-family palette and
   // atmosphere tuning. Starting angles stay scattered on purpose.
   var DATA = [
-    { name:'Mercury', family:'rocky',  color:0x9C9282, poles:false,
+    { name:'Mercury', family:'rocky',  color:0x9C9282, poles:false, metallic:0.55,
       atmoColor:0x000000, atmoStrength:0.0,
-      radius:5,  orbitRadius:260,  rotSpeed:0.050,  tilt:0.001, startAngle:0.4 },
+      radius:13, orbitRadius:260,  rotSpeed:0.050,  tilt:0.001, startAngle:0.4 },
     { name:'Venus',   family:'clouds', colorA:0xE8C9A0, colorB:0xB9884E,
       atmoColor:0xFFDFA0, atmoStrength:1.15,
-      radius:9,  orbitRadius:330,  rotSpeed:-0.035, tilt:0.05,  startAngle:2.1 },
+      radius:20, orbitRadius:330,  rotSpeed:-0.035, tilt:0.05,  startAngle:2.1 },
     { name:'Earth',   family:'earth',
       atmoColor:0x4DA3FF, atmoStrength:1.35,
-      radius:10, orbitRadius:410,  rotSpeed:0.220,  tilt:0.41,  startAngle:4.0 },
-    { name:'Mars',    family:'rocky',  color:0xC1440E, poles:true,
+      radius:23, orbitRadius:410,  rotSpeed:0.220,  tilt:0.41,  startAngle:4.0,
+      moons:[
+        { name:'Moon', family:'rocky', color:0xB8B4AC, poles:false, metallic:0.05,
+          radius:2.7, orbit:34, speed:0.90, spin:0.90 }
+      ] },
+    { name:'Mars',    family:'rocky',  color:0xC1440E, poles:true, metallic:0.05,
       atmoColor:0xE8A374, atmoStrength:0.35,
-      radius:6,  orbitRadius:480,  rotSpeed:0.210,  tilt:0.44,  startAngle:1.1 },
+      radius:15, orbitRadius:480,  rotSpeed:0.210,  tilt:0.44,  startAngle:1.1,
+      moons:[
+        { name:'Phobos', family:'rocky', color:0x8A7A6A, poles:false, metallic:0.02,
+          radius:1.0, orbit:22, speed:1.60, spin:1.60 },
+        { name:'Deimos', family:'rocky', color:0x9A8A78, poles:false, metallic:0.02,
+          radius:0.8, orbit:30, speed:1.10, spin:1.10 }
+      ] },
     { name:'Jupiter', family:'gas', colorA:0xD9B98C, colorB:0xB57A46, colorC:0xEDD9B0,
-      spot:true, spotColor:0xB33F27, spotUV:[0.62,0.56], spotRadius:0.16,
+      spot:true, spotColor:0xB33F27, spotUV:[0.62,0.56], spotRadius:0.20,
       atmoColor:0xE8C9A0, atmoStrength:0.4,
-      radius:55, orbitRadius:760,  rotSpeed:0.400,  tilt:0.05,  startAngle:5.2 },
+      radius:55, orbitRadius:760,  rotSpeed:0.400,  tilt:0.05,  startAngle:5.2,
+      moons:[
+        { name:'Io',       family:'rocky', color:0xE8D26A, poles:false, metallic:0.10,
+          radius:5.0, orbit:78,  speed:0.55, spin:0.55 },
+        { name:'Europa',   family:'rocky', color:0xE6EDF2, poles:false, metallic:0.20,
+          radius:4.3, orbit:96,  speed:0.42, spin:0.42 },
+        { name:'Ganymede', family:'rocky', color:0xA79582, poles:false, metallic:0.06,
+          radius:6.3, orbit:116, speed:0.32, spin:0.32 },
+        { name:'Callisto', family:'rocky', color:0x7C7368, poles:false, metallic:0.04,
+          radius:5.8, orbit:138, speed:0.24, spin:0.24 }
+      ] },
     { name:'Saturn',  family:'gas', colorA:0xE9D8B0, colorB:0xC9A96A, colorC:0xF5EAC8,
       spot:false, ringShadow:true,
       atmoColor:0xF0DFB0, atmoStrength:0.35,
-      radius:46, orbitRadius:1040, rotSpeed:0.360,  tilt:0.47,  startAngle:0.8, ring:true },
+      radius:46, orbitRadius:1040, rotSpeed:0.360,  tilt:0.47,  startAngle:0.8, ring:true,
+      moons:[
+        { name:'Enceladus', family:'rocky', color:0xF2F5F7, poles:false, metallic:0.25,
+          radius:2.2, orbit:130, speed:0.55, spin:0.55 },
+        { name:'Dione',     family:'rocky', color:0xD3C9B8, poles:false, metallic:0.10,
+          radius:3.0, orbit:155, speed:0.40, spin:0.40 },
+        { name:'Rhea',      family:'rocky', color:0xC9C4BC, poles:false, metallic:0.10,
+          radius:3.4, orbit:180, speed:0.32, spin:0.32 },
+        { name:'Titan',     family:'clouds', colorA:0xE8B978, colorB:0xC1863F,
+          radius:6.0, orbit:215, speed:0.22, spin:0.22 }
+      ] },
     { name:'Uranus',  family:'gas', colorA:0x9FE0E0, colorB:0x6FBEC0, colorC:0xC8F0F0,
       spot:false,
       atmoColor:0xB6EAEA, atmoStrength:0.5,
-      radius:28, orbitRadius:1280, rotSpeed:-0.150, tilt:1.71,  startAngle:3.3 },
+      radius:28, orbitRadius:1280, rotSpeed:-0.150, tilt:1.71,  startAngle:3.3,
+      moons:[
+        { name:'Titania', family:'rocky', color:0xA79A8C, poles:false, metallic:0.06,
+          radius:3.6, orbit:58, speed:0.35, spin:0.35 },
+        { name:'Oberon',  family:'rocky', color:0x8F8478, poles:false, metallic:0.06,
+          radius:3.4, orbit:72, speed:0.28, spin:0.28 }
+      ] },
     { name:'Neptune', family:'gas', colorA:0x3D5FCC, colorB:0x28408F, colorC:0x6C8BE0,
       spot:true, spotColor:0x18234D, spotUV:[0.35,0.44], spotRadius:0.09,
       atmoColor:0x5C7FE0, atmoStrength:0.55,
-      radius:27, orbitRadius:1480, rotSpeed:0.155,  tilt:0.49,  startAngle:5.8 }
+      radius:27, orbitRadius:1480, rotSpeed:0.155,  tilt:0.49,  startAngle:5.8,
+      // Triton is a real retrograde moon (orbits opposite its planet's
+      // rotation) — a negative speed reuses the exact same orbit-pivot
+      // rotation.y advance, just the other way, for a nice authentic touch.
+      moons:[
+        { name:'Triton', family:'rocky', color:0xD8C7C2, poles:false, metallic:0.12,
+          radius:4.3, orbit:62, speed:-0.40, spin:-0.40 }
+      ] }
   ];
 
   var UNIT_SPHERE = null;
@@ -330,7 +431,10 @@ var Planets = (function(){
       uAtmoColor: { value: toVec3(d.atmoColor || 0x000000) },
       uAtmoStrength: { value: d.atmoStrength || 0 }
     };
-    if (d.family === 'rocky') uniforms.uColor = { value: toVec3(d.color) };
+    if (d.family === 'rocky') {
+      uniforms.uColor = { value: toVec3(d.color) };
+      uniforms.uMetallic = { value: d.metallic || 0 };
+    }
     if (d.family === 'clouds') { uniforms.uColorA = { value: toVec3(d.colorA) }; uniforms.uColorB = { value: toVec3(d.colorB) }; }
     if (d.family === 'gas') {
       uniforms.uColorA = { value: toVec3(d.colorA) };
@@ -372,7 +476,7 @@ var Planets = (function(){
     pivot.rotation.z = d.tilt;
     pivot.add(mesh);
 
-    var body = { name: d.name, mesh: mesh, pivot: pivot, rotSpeed: d.rotSpeed, material: mat };
+    var body = { name: d.name, mesh: mesh, pivot: pivot, rotSpeed: d.rotSpeed, material: mat, moons: [] };
 
     if (d.ring) {
       var ring = buildRing(d.radius * 1.35, d.radius * 2.4, 0xE3CFA0, sunDir);
@@ -381,34 +485,94 @@ var Planets = (function(){
       body.ring = ring;
     }
 
+    if (d.moons && d.moons.length) {
+      // A moon group sits directly on the tilt pivot (a sibling of the
+      // planet mesh) so moons share the planet's axial tilt but never its
+      // day/night spin. Each moon then gets its own orbit pivot inside that
+      // group: rotating that pivot's Y axis every frame is the entire orbit
+      // — no per-frame trig, no extra allocation, just an Object3D nested
+      // one level deeper than the planet's own tilt/spin split.
+      var moonGroup = new THREE.Object3D();
+      pivot.add(moonGroup);
+      for (var mi = 0; mi < d.moons.length; mi++) {
+        var md = d.moons[mi];
+        // Reuses the sun direction and light falloff already computed for
+        // the parent planet: a moon's distance from its planet is tiny next
+        // to its distance from the Sun, so the same direction/falloff reads
+        // as correct without a second computation.
+        var moonMat = buildPlanetMaterial(md, sunDir, uLight);
+        var moonMesh = new THREE.Mesh(UNIT_SPHERE, moonMat);
+        moonMesh.scale.setScalar(md.radius);
+        moonMesh.position.set(md.orbit, 0, 0);
+
+        var orbitPivot = new THREE.Object3D();
+        // Scatter each moon's starting angle so a freshly built system never
+        // shows every moon lined up on the same side of its planet.
+        orbitPivot.rotation.y = (mi * 2.399) % (Math.PI * 2);
+        orbitPivot.add(moonMesh);
+        moonGroup.add(orbitPivot);
+
+        body.moons.push({
+          name: md.name, orbitPivot: orbitPivot, mesh: moonMesh,
+          material: moonMat, speed: md.speed, spin: (md.spin !== undefined ? md.spin : md.speed)
+        });
+      }
+    }
+
     return body;
   }
 
   // ── Sun ────────────────────────────────────────────────────────────────
+  // Normal and view direction are now passed through (v2 only passed UV) so
+  // the fragment shader can add limb darkening and bias its flares toward
+  // the visible edge — the two cues that read as "a lit sphere of plasma"
+  // instead of "a flat, noisy disc".
   var SUN_VERT = [
     'varying vec2 vUv;',
+    'varying vec3 vN;',
+    'varying vec3 vViewDir;',
     'void main(){',
     '  vUv = uv;',
-    '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+    '  vN = normalize(normalMatrix * normal);',
+    '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+    '  vViewDir = normalize(-mv.xyz);',
+    '  gl_Position = projectionMatrix * mv;',
     '}'
   ].join('\\n');
 
-  // Turbulent plasma + a handful of static flare bursts that pulse with time.
+  // Two turbulence scales — broad convection cells plus fine granulation —
+  // plus limb darkening and edge-biased prominences.
   var SUN_FRAG = [].concat(['precision mediump float;'], NOISE_GLSL, [
     'uniform float uTime;',
     'varying vec2 vUv;',
+    'varying vec3 vN;',
+    'varying vec3 vViewDir;',
     'void main(){',
     '  vec2 p = vUv * vec2(5.0, 3.0);',
+    // Broad convection: slow-drifting large cells.
     '  float n1 = fbm(p + vec2(uTime*0.10, -uTime*0.06));',
     '  float n2 = fbm(p*2.3 + vec2(-uTime*0.16, uTime*0.09));',
     '  float plasma = n1*0.65 + n2*0.35;',
+    // Fine granulation: a much higher frequency, faster, low-amplitude
+    // layer laid on top — small bright/dark cells like real solar
+    // granulation, not just one smooth blob per convection cell.
+    '  float granulation = fbm(p*11.0 + vec2(uTime*0.35, -uTime*0.28));',
+    '  plasma = clamp(plasma + (granulation - 0.5) * 0.16, 0.0, 1.0);',
     '  vec3 core = vec3(1.0, 0.95, 0.72);',
     '  vec3 mid  = vec3(1.0, 0.72, 0.28);',
     '  vec3 hot  = vec3(1.0, 0.42, 0.08);',
     '  vec3 col = mix(hot, mid, smoothstep(0.25, 0.6, plasma));',
     '  col = mix(col, core, smoothstep(0.6, 0.95, plasma));',
-    // Static flare positions with time-based pulsing brightness — cheap
-    // per-fragment distance checks rather than any extra geometry.
+    // Limb darkening: the sphere's true edge (grazing view angle) reads
+    // darker/redder than its centre, same as a real star's photosphere —
+    // this alone is most of what separates "lit sphere" from "flat noise".
+    '  float facing = max(0.0, dot(normalize(vN), normalize(vViewDir)));',
+    '  float limb = pow(facing, 0.42);',
+    '  col = mix(col * vec3(0.62,0.34,0.14), col, limb);',
+    // Flare/prominence bursts, biased toward the limb (real prominences are
+    // seen arcing off the visible edge, not scattered across the disc face)
+    // via the same facing term, and now vary in size per-flare instead of
+    // a single fixed radius.
     '  vec2 flares[5];',
     '  flares[0]=vec2(0.15,0.42); flares[1]=vec2(0.62,0.30); flares[2]=vec2(0.83,0.58);',
     '  flares[3]=vec2(0.35,0.78); flares[4]=vec2(0.55,0.68);',
@@ -416,8 +580,10 @@ var Planets = (function(){
     '  for(int i=0;i<5;i++){',
     '    float fi = float(i);',
     '    float pulse = 0.5 + 0.5*sin(uTime*0.8 + fi*2.1);',
+    '    float rad = 0.07 + 0.05*sin(fi*1.7 + uTime*0.3);',
     '    float d = distance(vUv, flares[i]);',
-    '    flareGlow += (1.0 - smoothstep(0.0, 0.09, d)) * pulse * 0.6;',
+    '    float edgeBias = 1.0 - smoothstep(0.35, 0.95, facing);',
+    '    flareGlow += (1.0 - smoothstep(0.0, rad, d)) * pulse * (0.35 + 0.65*edgeBias);',
     '  }',
     '  col += vec3(1.0,0.65,0.25) * flareGlow;',
     '  gl_FragColor = vec4(col, 1.0);',
@@ -529,6 +695,15 @@ var Planets = (function(){
       var body = system.bodies[i];
       body.mesh.rotation.y += dt * body.rotSpeed;
       body.material.uniforms.uTime.value = elapsed;
+      // Orbit is a single rotation.y advance on each moon's own pivot (see
+      // buildPlanet) — cheap enough that looping every moon of every planet
+      // every frame is still just a handful of scalar adds.
+      for (var mi = 0; mi < body.moons.length; mi++) {
+        var moon = body.moons[mi];
+        moon.orbitPivot.rotation.y += dt * moon.speed;
+        moon.mesh.rotation.y += dt * moon.spin;
+        moon.material.uniforms.uTime.value = elapsed;
+      }
     }
   }
 

@@ -1,0 +1,419 @@
+The Space Environment overhaul is complete and satisfactory.
+
+
+
+Do NOT modify:
+
+- Earth Mode.
+
+- The rendering engine.
+
+- The mode architecture.
+
+- Camera system.
+
+- Starfield.
+
+- Nebula.
+
+- Space dust.
+
+- Shooting stars.
+
+- Existing environment effects.
+
+
+
+Your task is ONLY to improve the appearance, readability, and realism of the Solar System's celestial bodies.
+
+
+
+=========================
+
+1. PLANET SCALE
+
+=========================
+
+
+
+The inner planets (Mercury, Venus, Earth, and Mars) appear far too small and are difficult to appreciate on mobile devices.
+
+
+
+Without breaking the overall sense of scale:
+
+
+
+- Increase the visual size of the inner planets enough that users can easily identify them.
+
+- Maintain believable relative size differences between planets.
+
+- Jupiter must remain the largest planet.
+
+- Saturn should remain the second largest.
+
+- Avoid cartoonishly oversized planets.
+
+
+
+The goal is visual readability, not astronomical accuracy.
+
+
+
+=========================
+
+2. PLANET DETAIL
+
+=========================
+
+
+
+Improve every planet individually.
+
+
+
+Each planet should immediately feel unique.
+
+
+
+Examples:
+
+
+
+Mercury
+
+- Rocky
+
+- Cratered
+
+- Dark grey
+
+- Metallic highlights
+
+
+
+Venus
+
+- Thick swirling yellow/orange clouds
+
+- Dense atmosphere
+
+
+
+Earth
+
+- Rich blue oceans
+
+- Green/brown continents
+
+- Bright white clouds
+
+- Realistic atmosphere
+
+
+
+Mars
+
+- Red deserts
+
+- Dark surface variation
+
+- Polar ice caps
+
+
+
+Jupiter
+
+- Rich layered cloud bands
+
+- Large, convincing Great Red Spot
+
+- Better turbulence
+
+
+
+Saturn
+
+- Softer cloud bands
+
+- Improved atmospheric colours
+
+- Better ring integration
+
+
+
+Uranus
+
+- Pale cyan appearance
+
+- Soft atmospheric gradients
+
+
+
+Neptune
+
+- Deep blue
+
+- Storm systems
+
+- Atmospheric banding
+
+
+
+=========================
+
+3. NATURAL SATELLITES
+
+=========================
+
+
+
+Add the major natural satellites.
+
+
+
+Examples:
+
+
+
+Earth
+
+- Moon
+
+
+
+Mars
+
+- Phobos
+
+- Deimos
+
+
+
+Jupiter
+
+- Io
+
+- Europa
+
+- Ganymede
+
+- Callisto
+
+
+
+Saturn
+
+- Titan
+
+- Enceladus
+
+- Rhea
+
+- Dione
+
+
+
+Uranus
+
+- Titania
+
+- Oberon
+
+
+
+Neptune
+
+- Triton
+
+
+
+Requirements:
+
+
+
+- Moons should orbit smoothly.
+
+- Orbit speed should be greatly accelerated compared to reality for visual interest while remaining smooth.
+
+- Moons should be appropriately scaled relative to their planets.
+
+- Keep the scene uncluttered.
+
+
+
+=========================
+
+4. THE SUN
+
+=========================
+
+
+
+The current Sun is still not convincing.
+
+
+
+Replace it with a far more realistic 3D Sun.
+
+
+
+Goals:
+
+
+
+- Inspired by NASA imagery.
+
+- Massive sphere.
+
+- Dynamic plasma.
+
+- Layered convection patterns.
+
+- Realistic solar granulation.
+
+- Active prominences around the edge.
+
+- Rich orange/yellow/white colour transitions.
+
+- Strong but controlled corona.
+
+- High-quality volumetric appearance without expensive rendering techniques.
+
+
+
+The Sun should immediately become the visual centerpiece of the Solar System.
+
+
+
+Avoid:
+
+- Flat appearance.
+
+- Cartoon glow.
+
+- Overexposed bloom.
+
+- Simple animated noise.
+
+
+
+=========================
+
+5. PERFORMANCE
+
+=========================
+
+
+
+Maintain mobile performance.
+
+
+
+Do not introduce unnecessary geometry.
+
+
+
+Reuse materials where possible.
+
+
+
+Avoid expensive per-frame allocations.
+
+
+
+=========================
+
+VERIFICATION
+
+=========================
+
+
+
+Before finishing, verify:
+
+
+
+- Earth Mode is completely unchanged.
+
+- Space Mode remains stable.
+
+- All planets render correctly.
+
+- All moons orbit correctly.
+
+- The Sun remains performant.
+
+- Mobile performance remains smooth.
+
+- No regressions were introduced.
+
+
+
+=========================
+
+6. SUN PROXIMITY WARNING
+
+=========================
+
+
+
+When the user zooms extremely close to the Sun, display a temporary fun warning popup.
+
+
+
+Requirements:
+
+
+
+- Trigger only when the camera reaches a predefined close distance from the Sun.
+
+- The popup should automatically disappear after 3–5 seconds.
+
+- It should not interrupt camera controls.
+
+- It should only appear once per close approach (do not spam the user repeatedly while they remain close).
+
+
+
+Example messages (randomly choose one each time):
+
+
+
+🔥 "Warning: SPF 1,000,000 still won't save you."
+
+
+
+☀️ "You're getting a little TOO close to the Sun."
+
+
+
+🥵 "Temperature check: Approximately 5,500°C. Proceed anyway?"
+
+
+
+🚀 "NASA called. They'd like their astronaut back."
+
+
+
+🌞 "Fun fact: This is a terrible place for a vacation."
+
+
+
+💀 "Achievement Unlocked: Crispy Explorer."
+
+
+
+😅 "Even Mercury thinks you're too close."
+
+
+
+🌋 "Personal space. The Sun has none."
+
+
+
+The tone should be playful and humorous while remaining clean and family-friendly.
+
+
+
+Do not affect performance or modify any other system.
