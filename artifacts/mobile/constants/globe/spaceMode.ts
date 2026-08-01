@@ -48,13 +48,6 @@
  *    parallax, and a streak mesh that only has live vertices for its ~0.5s of
  *    flight every 20-40s. None of it touches the Sun, planets or ring shaders
  *    in planets.ts — this module only owns the environment around them.
- *
- * 9. Sun-proximity warning: this module only detects the crossing (a plain
- *    number comparison against the camera's distance from the origin,
- *    already computed for free by CameraRig) and posts one Bridge event.
- *    Picking the message text and rendering the popup both live on the
- *    React Native side (GlobeView/home), not here, so copy or UI changes
- *    never require touching the WebView bundle.
  */
 export const SPACE_MODE_JS = `
 var SpaceMode = (function(){
@@ -541,17 +534,6 @@ var SpaceMode = (function(){
     s.material.uniforms.uOpacity.value = Math.min(fadeIn, fadeOut) * 0.55;
   }
 
-  // Sun-proximity warning: the Sun sits at the world origin and the camera's
-  // look-at target is always the origin in this free-orbit profile, so
-  // distance-to-Sun is just the camera's distance from (0,0,0) — no extra
-  // state needed beyond what CameraRig already drives every frame. Two
-  // thresholds (not one) give hysteresis: cross NEAR to fire once, and the
-  // camera must cross back out past FAR before it can fire again, so
-  // hovering right at the edge of NEAR cannot spam repeated warnings.
-  var SUN_WARNING_NEAR = null;   // set from Planets.SUN_RADIUS in init()
-  var SUN_WARNING_FAR = null;
-  var sunWarningArmed = true;
-
   // Distance the pinch gesture started from.
   var pinchD0 = 6200;
   var solarSystem = null;
@@ -568,8 +550,6 @@ var SpaceMode = (function(){
     scene.add(shootingStar.mesh);
 
     solarSystem = Planets.build(scene);
-    SUN_WARNING_NEAR = Planets.SUN_RADIUS * 1.7;
-    SUN_WARNING_FAR = Planets.SUN_RADIUS * 3.1;
 
     // Sun-like key light: a point light at the Sun's position (the world
     // origin), not a directional light. A directional light shines from one
@@ -615,16 +595,6 @@ var SpaceMode = (function(){
     }
 
     updateShootingStar(dt, elapsed);
-
-    if (camera) {
-      var sunDist = camera.position.length();
-      if (sunWarningArmed && sunDist < SUN_WARNING_NEAR) {
-        sunWarningArmed = false;
-        Bridge.post({ type: 'sunProximity' });
-      } else if (!sunWarningArmed && sunDist > SUN_WARNING_FAR) {
-        sunWarningArmed = true;
-      }
-    }
 
     Planets.update(dt, elapsed, solarSystem);
   }

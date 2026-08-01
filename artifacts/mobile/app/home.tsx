@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Platform,
   Pressable,
@@ -24,19 +24,6 @@ import { OnboardingModal, useOnboarding } from '@/components/OnboardingModal';
 import { useColors } from '@/hooks/useColors';
 import { Country, findNearestCountry } from '@/constants/countries';
 
-// Playful, family-friendly copy for the Sun-proximity warning (Space Mode).
-// One is picked at random each time the camera crosses into the close zone.
-const SUN_WARNINGS = [
-  '🔥 Warning: SPF 1,000,000 still won\u2019t save you.',
-  '☀️ You\u2019re getting a little TOO close to the Sun.',
-  '🥵 Temperature check: Approximately 5,500°C. Proceed anyway?',
-  '🚀 NASA called. They\u2019d like their astronaut back.',
-  '🌞 Fun fact: This is a terrible place for a vacation.',
-  '💀 Achievement Unlocked: Crispy Explorer.',
-  '😅 Even Mercury thinks you\u2019re too close.',
-  '🌋 Personal space. The Sun has none.',
-];
-
 export default function HomeScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
@@ -53,8 +40,6 @@ export default function HomeScreen() {
   // is any real user-facing entry point. Remove before release — see the
   // __DEV__-gated toggle button below.
   const [sceneMode, setSceneMode]                 = useState<SceneMode>('earth');
-  const [sunWarning, setSunWarning]                = useState<string | null>(null);
-  const sunWarningTimeout                          = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -88,18 +73,6 @@ export default function HomeScreen() {
     setGlobeSelectedLatLon(null);
   }, []);
 
-  const handleSunProximity = useCallback(() => {
-    if (sunWarningTimeout.current) clearTimeout(sunWarningTimeout.current);
-    const msg = SUN_WARNINGS[Math.floor(Math.random() * SUN_WARNINGS.length)];
-    setSunWarning(msg);
-    sunWarningTimeout.current = setTimeout(() => setSunWarning(null), 4000);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (sunWarningTimeout.current) clearTimeout(sunWarningTimeout.current);
-    };
-  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -112,7 +85,6 @@ export default function HomeScreen() {
           active={isFocused}
           onCountryTap={handleCountryTap}
           onReady={() => setGlobeReady(true)}
-          onSunProximity={handleSunProximity}
           selectedLatLon={globeSelectedLatLon}
         />
       </View>
@@ -157,22 +129,6 @@ export default function HomeScreen() {
             <Text style={[styles.tapHintText, { color: colors.foregroundSecondary }]}>
               Tap the globe to explore
             </Text>
-          </View>
-        </Animated.View>
-      )}
-
-      {/* Sun-proximity warning toast (Space Mode). Non-blocking: it never
-          intercepts touches, so camera controls keep working underneath it,
-          and it clears itself a few seconds after appearing. */}
-      {sunWarning && (
-        <Animated.View
-          entering={FadeIn.duration(250)}
-          exiting={FadeOut.duration(250)}
-          pointerEvents="none"
-          style={[styles.sunWarning, { top: topInset + 64 }]}
-        >
-          <View style={[styles.sunWarningPill, { backgroundColor: 'rgba(20,10,4,0.88)', borderColor: 'rgba(255,154,60,0.45)' }]}>
-            <Text style={styles.sunWarningText}>{sunWarning}</Text>
           </View>
         </Animated.View>
       )}
@@ -266,25 +222,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0, left: 0, right: 0,
     zIndex: 10,
-  },
-  sunWarning: {
-    position: 'absolute',
-    left: 0, right: 0,
-    alignItems: 'center',
-    zIndex: 15,
-  },
-  sunWarningPill: {
-    maxWidth: '86%',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  sunWarningText: {
-    color: '#FFE7C9',
-    fontSize: 13,
-    fontFamily: 'Inter_600SemiBold',
-    textAlign: 'center',
   },
   // TEMPORARY DEV-ONLY — see the __DEV__ block above. Remove alongside it.
   devModeToggle: {

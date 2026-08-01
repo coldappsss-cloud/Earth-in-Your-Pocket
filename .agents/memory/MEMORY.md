@@ -2,3 +2,5 @@
 - [Scene engine architecture](scene-engine-architecture.md) — one WebGL context runs all 3D modes; Earth's frame-based smoothing and non-rotating camera are load-bearing.
 - [Expo dark-only theme](expo-dark-theme.md) — colors.ts has only a `dark` key; useColors.ts always returns colors.dark (no light/dark toggle).
 - [GLSL smoothstep edge ordering](glsl-smoothstep-edges.md) — reversed smoothstep(edge0>edge1,...) is undefined behavior; invert with 1.0-smoothstep instead.
+- [Headless globe harness](globe-headless-harness.md) — run the WebView scene under Node/vm to verify scene graph; lists the stub gaps that silently block boot.
+- [Apparent size over absolute size](apparent-size-ratio.md) — scaling bodies and orbits together changes nothing on screen; only the radius/orbit ratio does.
